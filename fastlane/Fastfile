@@ -1,0 +1,116 @@
+default_platform(:ios)
+
+ENV["FASTLANE_DISABLE_COLORS"] = "1"
+ENV["FASTLANE_SKIP_UPDATE_CHECK"] = "1"
+ENV["FASTLANE_OPT_OUT_USAGE"]    = "1"
+
+platform :ios do
+  desc "Verify login for API key or Apple ID session"
+  lane :login do
+    if ENV["ASC_KEY_ID"] && ENV["ASC_ISSUER_ID"] && ENV["ASC_KEY_PATH"]
+      UI.message("Using App Store Connect API Key")
+      api_key = app_store_connect_api_key(
+        key_id: ENV["ASC_KEY_ID"],
+        issuer_id: ENV["ASC_ISSUER_ID"],
+        key_filepath: ENV["ASC_KEY_PATH"]
+      )
+      app_store_connect_api_key(api_key: api_key)
+    else
+      UI.message("Using Apple ID/Session login")
+      login
+    end
+    UI.message("Login verified")
+  end
+
+  desc "Register a UDID to the team"
+  lane :register_udid do
+    ensure_env_vars(env_vars: ["UDID", "BUNDLE_ID"])
+
+    team_id = ENV["TEAM_ID"]
+    udid    = ENV["UDID"]
+    name    = ENV["DEVICE_NAME"] || "device-#{udid[-6,6]}"
+
+    if ENV["ASC_KEY_ID"]
+      api_key = app_store_connect_api_key(
+        key_id: ENV["ASC_KEY_ID"],
+        issuer_id: ENV["ASC_ISSUER_ID"],
+        key_filepath: ENV["ASC_KEY_PATH"]
+      )
+      app_store_connect_api_key(api_key: api_key)
+    else
+      login
+    end
+
+    UI.message("Registering device #{name} (#{udid})")
+    register_device(name: name, udid: udid, team_id: team_id)
+
+    if ENV["AUTO_SIGH"] == "1"
+      UI.message("Auto generate/download AdHoc provisioning profile…")
+      sigh(
+        adhoc: true,
+        app_identifier: ENV["BUNDLE_ID"],
+        team_id: team_id,
+        force: true,
+        skip_certificate_verification: true,
+        ignore_profiles_with_different_name: true,
+        filename: "adhoc_#{ENV['BUNDLE_ID']}.mobileprovision",
+        output_path: "./out"
+      )
+    end
+
+    UI.message("Register UDID done")
+  end
+
+  desc "Resign an IPA with AdHoc profile"
+  lane :resign_ipa do
+    ensure_env_vars(env_vars: ["IPA_PATH", "BUNDLE_ID"])
+    ipa_path = ENV["IPA_PATH"]
+    team_id  = ENV["TEAM_ID"]
+    out_dir  = "./out"
+    sh("mkdir -p #{out_dir}")
+
+    pp_path  = ENV["PP_PATH"]
+    if !pp_path || pp_path.empty?
+      UI.message("No PP_PATH provided -> using sigh to fetch AdHoc profile")
+      if ENV["ASC_KEY_ID"]
+        api_key = app_store_connect_api_key(
+          key_id: ENV["ASC_KEY_ID"],
+          issuer_id: ENV["ASC_ISSUER_ID"],
+          key_filepath: ENV["ASC_KEY_PATH"]
+        )
+        app_store_connect_api_key(api_key: api_key)
+      else
+        login
+      end
+
+      profile_path = Actions::SighAction.run(
+        adhoc: true,
+        app_identifier: ENV["BUNDLE_ID"],
+        team_id: team_id,
+        force: true,
+        skip_certificate_verification: true,
+        ignore_profiles_with_different_name: true,
+        filename: "adhoc_#{ENV['BUNDLE_ID']}.mobileprovision",
+        output_path: out_dir
+      )
+      pp_path = profile_path
+    end
+
+    new_name = File.basename(ipa_path, ".ipa") + "-resigned.ipa"
+    out_ipa  = File.join(out_dir, new_name)
+
+    mapping = { ENV["BUNDLE_ID"] => pp_path }
+
+    resign(
+      ipa: ipa_path,
+      signing_identity: ENV["SIGN_IDENTITY"],
+      provisioning_profile: mapping,
+      display_name: ENV["NEW_DISPLAY_NAME"],
+      version: ENV["NEW_VERSION"],
+      short_version: ENV["NEW_SHORT_VERSION"],
+      output: out_ipa
+    )
+
+    UI.message("RESIGNED_IPA_PATH=#{out_ipa}")
+  end
+end
