@@ -348,6 +348,194 @@ class SignerManager: ObservableObject {
         
         return nil
     }
+    
+    // MARK: - 开发者证书管理
+    
+    func getInstalledCertificates() async -> [DeveloperCertificate] {
+        addLog("[INFO] ========== 开始获取已安装的开发者证书 ==========")
+        
+        do {
+            // 使用security命令获取证书列表
+            addLog("[INFO] 执行命令: /usr/bin/security find-identity -v -p codesigning")
+            let result = try ProcessRunner.run("/usr/bin/security", ["find-identity", "-v", "-p", "codesigning"], env: [:], cwd: nil) { _ in }
+            
+            // 添加完整的输出日志
+            addLog("[DEBUG] ========== Security命令输出 ==========")
+            addLog("[DEBUG] 标准输出长度: \(result.stdout.count) 字符")
+            addLog("[DEBUG] 错误输出长度: \(result.stderr.count) 字符")
+            addLog("[DEBUG] 完整输出:\n\(result.stdout)")
+            if !result.stderr.isEmpty {
+                addLog("[DEBUG] 错误输出:\n\(result.stderr)")
+            }
+            addLog("[DEBUG] ========================================")
+            
+            var certificates: [DeveloperCertificate] = []
+            let lines = result.stdout.components(separatedBy: .newlines)
+            
+            addLog("[INFO] 原始输出总行数: \(lines.count)")
+            addLog("[DEBUG] ========== 逐行分析 ==========")
+            for (index, line) in lines.enumerated() {
+                let trimmedLine = line.trimmingCharacters(in: .whitespaces)
+                if !trimmedLine.isEmpty {
+                    addLog("[DEBUG] 行 \(index): [\(trimmedLine)]")
+                }
+            }
+            addLog("[DEBUG] ==================================")
+            
+            // 先收集所有证书
+            var allCertificates: [DeveloperCertificate] = []
+            var processedLines = 0
+            var matchedLines = 0
+            var skippedLines = 0
+            
+            addLog("[INFO] ========== 开始解析证书 ==========")
+            
+            for (lineIndex, line) in lines.enumerated() {
+                let trimmedLine = line.trimmingCharacters(in: .whitespaces)
+                
+                // 跳过空行
+                if trimmedLine.isEmpty {
+                    continue
+                }
+                
+                processedLines += 1
+                
+                // 更宽松的匹配条件，包含更多证书类型
+                // 注意：要匹配"Developer"和"Development"
+                if line.contains("Developer") || line.contains("Development") || line.contains("Distribution") {
+                    matchedLines += 1
+                    addLog("[INFO] ========== 找到证书行 #\(matchedLines) (原始行号: \(lineIndex)) ==========")
+                    addLog("[DEBUG] 原始行内容: [\(line)]")
+                    
+                    // 解析证书信息
+                    let components = line.components(separatedBy: "\"")
+                    addLog("[DEBUG] 引号分割后组件数量: \(components.count)")
+                    
+                    for (index, component) in components.enumerated() {
+                        addLog("[DEBUG]   组件[\(index)]: [\(component)]")
+                    }
+                    
+                    if components.count >= 2 {
+                        // 重新分析security输出格式
+                        // 格式: "1) CERTIFICATE_ID "CERTIFICATE_NAME""
+                        // 用引号分割后: [0]="1) CERTIFICATE_ID ", [1]="CERTIFICATE_NAME", [2]=""
+                        
+                        // 从第0个组件提取证书ID（去掉前面的数字和括号）
+                        let firstPart = components[0].trimmingCharacters(in: .whitespaces)
+                        addLog("[DEBUG] 第一部分(去空格): [\(firstPart)]")
+                        
+                        let idParts = firstPart.components(separatedBy: ") ")
+                        addLog("[DEBUG] 按') '分割后: \(idParts.count) 部分")
+                        for (idx, part) in idParts.enumerated() {
+                            addLog("[DEBUG]   ID部分[\(idx)]: [\(part)]")
+                        }
+                        
+                        let certificateId = idParts.last?.trimmingCharacters(in: .whitespaces) ?? firstPart
+                        
+                        // 证书名称在components[1]中
+                        let displayName = components[1].trimmingCharacters(in: .whitespaces)
+                        
+                        addLog("[INFO] ✓ 提取成功:")
+                        addLog("[INFO]   证书ID: [\(certificateId)]")
+                        addLog("[INFO]   显示名称: [\(displayName)]")
+                        
+                        let certType = getCertificateType(from: line)
+                        let certificate = DeveloperCertificate(
+                            id: certificateId,
+                            name: displayName,
+                            type: certType
+                        )
+                        
+                        addLog("[INFO]   证书类型: \(certType.displayName)")
+                        addLog("[INFO]   完整显示: [\(certificate.displayName)]")
+                        addLog("[INFO]   是否为Development: \(certType.isDevelopment)")
+                        
+                        allCertificates.append(certificate)
+                        addLog("[SUCCESS] 证书 #\(allCertificates.count) 添加成功")
+                    } else {
+                        skippedLines += 1
+                        addLog("[WARN] ✗ 组件数量不足(\(components.count))，跳过此行")
+                    }
+                    addLog("[INFO] ==========================================")
+                } else {
+                    // 不匹配的行
+                    if !trimmedLine.isEmpty && !trimmedLine.contains("valid identities found") {
+                        addLog("[DEBUG] 跳过非证书行 #\(lineIndex): [\(trimmedLine)]")
+                    }
+                }
+            }
+            
+            addLog("[INFO] ========== 解析统计 ==========")
+            addLog("[INFO] 处理的非空行数: \(processedLines)")
+            addLog("[INFO] 匹配的证书行数: \(matchedLines)")
+            addLog("[INFO] 跳过的行数: \(skippedLines)")
+            addLog("[INFO] 成功解析的证书数: \(allCertificates.count)")
+            addLog("[INFO] ==================================")
+            
+            addLog("[INFO] ========== 开始证书排序 ==========")
+            addLog("[INFO] 排序前证书列表:")
+            for (index, cert) in allCertificates.enumerated() {
+                addLog("[INFO]   [\(index+1)] \(cert.type.displayName): \(cert.shortDisplayName)")
+            }
+            
+            // 按优先级排序：Development证书优先，然后按类型排序
+            certificates = allCertificates.sorted { cert1, cert2 in
+                // Development证书优先
+                if cert1.type.isDevelopment && !cert2.type.isDevelopment {
+                    return true // cert1是Development，cert2不是，cert1优先
+                } else if !cert1.type.isDevelopment && cert2.type.isDevelopment {
+                    return false // cert2是Development，cert1不是，cert2优先
+                } else {
+                    // 都是Development或都不是，按类型排序
+                    return cert1.type.rawValue < cert2.type.rawValue
+                }
+            }
+            
+            addLog("[INFO] 排序后证书列表 (Development优先):")
+            for (index, cert) in certificates.enumerated() {
+                addLog("[INFO]   [\(index+1)] \(cert.type.displayName): \(cert.shortDisplayName) [isDev: \(cert.type.isDevelopment)]")
+            }
+            addLog("[INFO] ==================================")
+            
+            addLog("[SUCCESS] ========== 证书获取完成 ==========")
+            addLog("[SUCCESS] 总共找到 \(certificates.count) 个开发者证书")
+            addLog("[SUCCESS] ======================================")
+            
+            return certificates
+            
+        } catch {
+            addLog("[ERROR] 获取证书失败: \(error)")
+            return []
+        }
+    }
+    
+    private func getCertificateType(from line: String) -> CertificateType {
+        addLog("[DEBUG] 检测证书类型，行内容: [\(line)]")
+        
+        // 注意：要先检查Distribution，因为"Apple Distribution"也包含"Distribution"
+        if line.contains("Apple Distribution") {
+            addLog("[DEBUG] ✓ 检测到Apple Distribution")
+            return .appleDistribution
+        } else if line.contains("iOS Distribution") {
+            addLog("[DEBUG] ✓ 检测到iOS Distribution")
+            return .iosDistribution
+        } else if line.contains("Mac Distribution") {
+            addLog("[DEBUG] ✓ 检测到Mac Distribution")
+            return .macDistribution
+        } else if line.contains("Apple Development") {
+            addLog("[DEBUG] ✓ 检测到Apple Development")
+            return .appleDevelopment
+        } else if line.contains("iPhone Developer") {
+            addLog("[DEBUG] ✓ 检测到iPhone Developer")
+            return .iosDevelopment
+        } else if line.contains("Mac Developer") {
+            addLog("[DEBUG] ✓ 检测到Mac Developer")
+            return .macDevelopment
+        } else {
+            addLog("[WARN] ✗ 未识别的证书类型，返回unknown")
+            return .unknown
+        }
+    }
 }
 
 extension DateFormatter {

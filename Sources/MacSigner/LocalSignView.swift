@@ -21,6 +21,11 @@ struct LocalSignView: View {
     @State private var uploadProgress = ""
     @State private var uploadResult: UploadResult?
     
+    // 证书选择相关状态
+    @State private var certificates: [DeveloperCertificate] = []
+    @State private var selectedCertificate: DeveloperCertificate?
+    @State private var isLoadingCertificates = false
+    
     var body: some View {
         VStack(spacing: 0) {
             // 标题栏
@@ -75,8 +80,69 @@ struct LocalSignView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Developer ID")
                                 .font(.subheadline)
-                            TextField("Apple Development: Your Name (XXXXXXXXXX)", text: $developerId)
-                                .textFieldStyle(.roundedBorder)
+                            
+                            HStack {
+                                if certificates.isEmpty {
+                                    TextField("Apple Development: Your Name (XXXXXXXXXX)", text: $developerId)
+                                        .textFieldStyle(.roundedBorder)
+                                    
+                                    Button("加载证书") {
+                                        loadCertificates()
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .disabled(isLoadingCertificates)
+                                } else {
+                                    VStack(spacing: 8) {
+                                        Picker("选择证书", selection: $selectedCertificate) {
+                                            Text("手动输入").tag(nil as DeveloperCertificate?)
+                                            ForEach(certificates) { certificate in
+                                                Text(certificate.shortDisplayName)
+                                                    .tag(certificate as DeveloperCertificate?)
+                                            }
+                                        }
+                                        .pickerStyle(MenuPickerStyle())
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 32)
+                                        
+                                        HStack {
+                                            Button("刷新") {
+                                                loadCertificates()
+                                            }
+                                            .buttonStyle(.bordered)
+                                            .disabled(isLoadingCertificates)
+                                            
+                                            if isLoadingCertificates {
+                                                ProgressView()
+                                                    .scaleEffect(0.8)
+                                            }
+                                            
+                                            Spacer()
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if selectedCertificate == nil {
+                                TextField("或手动输入Developer ID", text: $developerId)
+                                    .textFieldStyle(.roundedBorder)
+                            } else {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("使用证书:")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    
+                                    Text(selectedCertificate?.displayName ?? "")
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                        .lineLimit(nil)
+                                        .multilineTextAlignment(.leading)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 4)
+                                        .background(Color.blue.opacity(0.1))
+                                        .cornerRadius(4)
+                                }
+                            }
                         }
                         
                         VStack(alignment: .leading, spacing: 8) {
@@ -261,12 +327,32 @@ struct LocalSignView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .frame(width: 100)
-                .disabled(selectedIPAPath.isEmpty || bundleId.isEmpty || developerId.isEmpty || uuid.isEmpty || isSigning)
+                .disabled(selectedIPAPath.isEmpty || bundleId.isEmpty || uuid.isEmpty || isSigning || (selectedCertificate == nil && developerId.isEmpty))
             }
             .padding()
             .background(Color(NSColor.controlBackgroundColor))
         }
-        .frame(width: 600, height: 500)
+        .frame(width: 650, height: 600)
+        .onAppear {
+            loadCertificates()
+        }
+    }
+    
+    private func loadCertificates() {
+        isLoadingCertificates = true
+        
+        Task {
+            let certs = await signerManager.getInstalledCertificates()
+            
+            await MainActor.run {
+                self.certificates = certs
+                self.isLoadingCertificates = false
+                print("[DEBUG] 界面更新: 证书数量 = \(certs.count)")
+                for (index, cert) in certs.enumerated() {
+                    print("[DEBUG] 证书 \(index): \(cert.displayName)")
+                }
+            }
+        }
     }
     
     private func selectIPAFile() {
@@ -291,9 +377,18 @@ struct LocalSignView: View {
     private func startSigning() {
         guard !selectedIPAPath.isEmpty,
               !bundleId.isEmpty,
-              !developerId.isEmpty,
               !uuid.isEmpty else {
             return
+        }
+        
+        // 确定要使用的Developer ID
+        let finalDeveloperId: String
+        if let selectedCert = selectedCertificate {
+            finalDeveloperId = selectedCert.id
+        } else if !developerId.isEmpty {
+            finalDeveloperId = developerId
+        } else {
+            return // 没有选择证书也没有手动输入
         }
         
         if enableUpload && uploadURL.isEmpty {
@@ -310,7 +405,7 @@ struct LocalSignView: View {
                 let result = try await signerManager.signLocalIPA(
                     ipaPath: selectedIPAPath,
                     bundleId: bundleId,
-                    developerId: developerId,
+                    developerId: finalDeveloperId,
                     uuid: uuid
                 )
                 

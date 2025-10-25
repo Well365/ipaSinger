@@ -58,8 +58,18 @@ struct ContentView: View {
             
             // 日志显示
             VStack(alignment: .leading) {
-                Text("运行日志")
-                    .font(.headline)
+                HStack {
+                    Text("运行日志")
+                        .font(.headline)
+                    
+                    Spacer()
+                    
+                    Button("复制日志") {
+                        copyLogsToClipboard()
+                    }
+                    .buttonStyle(.bordered)
+                    .font(.caption)
+                }
                 
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 2) {
@@ -67,6 +77,7 @@ struct ContentView: View {
                             Text(signerManager.logs[index])
                                 .font(.system(.caption, design: .monospaced))
                                 .foregroundColor(logColor(for: signerManager.logs[index]))
+                                .textSelection(.enabled)
                         }
                     }
                     .padding(8)
@@ -115,7 +126,17 @@ struct ContentView: View {
             return .orange
         } else if log.contains("[INFO]") {
             return .primary
+        } else if log.contains("[SUCCESS]") {
+            return .green
+        } else if log.contains("[DEBUG]") {
+            return .secondary
         }
         return .secondary
+    }
+    
+    private func copyLogsToClipboard() {
+        let logsText = signerManager.logs.joined(separator: "\n")
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(logsText, forType: .string)
     }
 }
