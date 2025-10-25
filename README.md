@@ -2,6 +2,10 @@
 
 A command-line tool for signing iOS application (IPA) files on macOS. This tool automates the process of re-signing IPA files with your own developer certificates and provisioning profiles.
 
+## 🚀 Quick Start
+
+New to ipaSinger? Check out the [Quick Start Guide](QUICKSTART.md) to get up and running in 5 minutes!
+
 ## Features
 
 - ✅ Sign IPA files with your Apple Developer certificates
