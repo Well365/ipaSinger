@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-10-25
 
 ### Added
-- Initial release of ipaSigner
+- Initial release of ipaSinger
 - Command-line interface for signing IPA files
 - Support for signing with Apple Developer certificates
 - Provisioning profile replacement functionality

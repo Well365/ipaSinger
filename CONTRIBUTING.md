@@ -1,6 +1,6 @@
 # Contributing to ipaSinger
 
-Thank you for your interest in contributing to ipaSigner! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to ipaSinger! This document provides guidelines and instructions for contributing.
 
 ## How to Contribute
 
@@ -75,4 +75,4 @@ When contributing code changes:
 
 Feel free to open an issue for any questions or discussions about contributing.
 
-Thank you for helping make ipaSigner better!
+Thank you for helping make ipaSinger better!
