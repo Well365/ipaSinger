@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Application Identifier -->
+    <key>application-identifier</key>
+    <string>TEAMID.com.yourcompany.yourapp</string>
+    
+    <!-- Team Identifier -->
+    <key>com.apple.developer.team-identifier</key>
+    <string>TEAMID</string>
+    
+    <!-- Get Task Allow (for development/debugging) -->
+    <key>get-task-allow</key>
+    <true/>
+    
+    <!-- Keychain Access Groups -->
+    <key>keychain-access-groups</key>
+    <array>
+        <string>TEAMID.com.yourcompany.yourapp</string>
+    </array>
+    
+    <!-- App Groups (optional) -->
+    <!--
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>group.com.yourcompany.yourapp</string>
+    </array>
+    -->
+    
+    <!-- Associated Domains (optional) -->
+    <!--
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:yourwebsite.com</string>
+    </array>
+    -->
+    
+    <!-- Push Notifications (optional) -->
+    <!--
+    <key>aps-environment</key>
+    <string>development</string>
+    -->
+    
+    <!-- iCloud (optional) -->
+    <!--
+    <key>com.apple.developer.icloud-container-identifiers</key>
+    <array>
+        <string>iCloud.com.yourcompany.yourapp</string>
+    </array>
+    <key>com.apple.developer.icloud-services</key>
+    <array>
+        <string>CloudDocuments</string>
+        <string>CloudKit</string>
+    </array>
+    <key>com.apple.developer.ubiquity-container-identifiers</key>
+    <array>
+        <string>iCloud.com.yourcompany.yourapp</string>
+    </array>
+    <key>com.apple.developer.ubiquity-kvstore-identifier</key>
+    <string>TEAMID.com.yourcompany.yourapp</string>
+    -->
+    
+    <!-- HealthKit (optional) -->
+    <!--
+    <key>com.apple.developer.healthkit</key>
+    <true/>
+    <key>com.apple.developer.healthkit.access</key>
+    <array>
+        <string>health-records</string>
+    </array>
+    -->
+    
+    <!-- HomeKit (optional) -->
+    <!--
+    <key>com.apple.developer.homekit</key>
+    <true/>
+    -->
+    
+    <!-- In-App Purchase (optional) -->
+    <!--
+    <key>com.apple.developer.in-app-payments</key>
+    <array>
+        <string>merchant.com.yourcompany.yourapp</string>
+    </array>
+    -->
+    
+    <!-- Siri (optional) -->
+    <!--
+    <key>com.apple.developer.siri</key>
+    <true/>
+    -->
+    
+    <!-- Wallet (optional) -->
+    <!--
+    <key>com.apple.developer.pass-type-identifiers</key>
+    <array>
+        <string>pass.com.yourcompany.yourapp</string>
+    </array>
+    -->
+</dict>
+</plist>
