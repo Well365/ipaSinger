@@ -41,22 +41,22 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("服务器地址")
                                 .font(.subheadline)
-                            TextField("https://your-server.com", text: $serverURL)
-                                .textFieldStyle(.roundedBorder)
+                            NSTextFieldWrapper(text: $serverURL, placeholder: "https://your-server.com")
+                                .frame(height: 22)
                         }
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text("API Token")
                                 .font(.subheadline)
-                            TextField("your-api-token", text: $apiToken)
-                                .textFieldStyle(.roundedBorder)
+                            NSTextFieldWrapper(text: $apiToken, placeholder: "your-api-token")
+                                .frame(height: 22)
                         }
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text("轮询间隔(秒)")
                                 .font(.subheadline)
-                            TextField("10", text: $pollInterval)
-                                .textFieldStyle(.roundedBorder)
+                            NSTextFieldWrapper(text: $pollInterval, placeholder: "10")
+                                .frame(height: 22)
                         }
                     }
                     .padding()
@@ -72,23 +72,23 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Apple ID")
                                 .font(.subheadline)
-                            TextField("your-apple-id@example.com", text: $appleId)
-                                .textFieldStyle(.roundedBorder)
+                            NSTextFieldWrapper(text: $appleId, placeholder: "your-apple-id@example.com")
+                                .frame(height: 22)
                         }
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Session Token (可选)")
                                 .font(.subheadline)
-                            TextField("session-token", text: $sessionToken)
-                                .textFieldStyle(.roundedBorder)
+                            NSTextFieldWrapper(text: $sessionToken, placeholder: "session-token")
+                                .frame(height: 22)
                         }
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text("P12 证书路径")
                                 .font(.subheadline)
                             HStack {
-                                TextField("证书文件路径", text: $p12Path)
-                                    .textFieldStyle(.roundedBorder)
+                                NSTextFieldWrapper(text: $p12Path, placeholder: "证书文件路径")
+                                    .frame(height: 22)
                                 
                                 Button("选择文件") {
                                     selectP12File()
@@ -100,8 +100,8 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("P12 密码")
                                 .font(.subheadline)
-                            SecureField("证书密码", text: $p12Password)
-                                .textFieldStyle(.roundedBorder)
+                            NSTextFieldWrapper(text: $p12Password, placeholder: "证书密码", isSecure: true)
+                                .frame(height: 22)
                         }
                     }
                     .padding()

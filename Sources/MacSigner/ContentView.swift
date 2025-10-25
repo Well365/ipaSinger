@@ -3,7 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var signerManager: SignerManager
     @State private var showingSettings = false
-    @State private var showingLocalSign = false
+    @State private var localSignWindowController: LocalSignWindowController?
     
     var body: some View {
         VStack(spacing: 20) {
@@ -19,7 +19,7 @@ struct ContentView: View {
                 Spacer()
                 
                 Button("本地签名") {
-                    showingLocalSign = true
+                    openLocalSignWindow()
                 }
                 .buttonStyle(.bordered)
                 
@@ -113,10 +113,6 @@ struct ContentView: View {
             SettingsView()
                 .environmentObject(signerManager)
         }
-        .sheet(isPresented: $showingLocalSign) {
-            LocalSignView()
-                .environmentObject(signerManager)
-        }
     }
     
     private func logColor(for log: String) -> Color {
@@ -138,5 +134,22 @@ struct ContentView: View {
         let logsText = signerManager.logs.joined(separator: "\n")
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(logsText, forType: .string)
+    }
+    
+    private func openLocalSignWindow() {
+        print("[DEBUG] ========== Opening Local Sign Window ==========")
+        
+        // 如果窗口控制器已存在，直接显示
+        if let controller = localSignWindowController {
+            print("[DEBUG] Window controller already exists, showing window")
+            controller.show()
+            return
+        }
+        
+        // 创建新的窗口控制器
+        print("[DEBUG] Creating new window controller")
+        let controller = LocalSignWindowController(signerManager: signerManager)
+        localSignWindowController = controller
+        controller.show()
     }
 }

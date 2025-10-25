@@ -4,7 +4,6 @@ import UniformTypeIdentifiers
 
 struct LocalSignView: View {
     @EnvironmentObject private var signerManager: SignerManager
-    @Environment(\.dismiss) private var dismiss
     
     @State private var selectedIPAPath = ""
     @State private var bundleId = ""
@@ -37,6 +36,7 @@ struct LocalSignView: View {
             }
             .padding()
             .background(Color(NSColor.controlBackgroundColor))
+            .focusable(false)
             
             Divider()
             
@@ -73,8 +73,11 @@ struct LocalSignView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Bundle ID")
                                 .font(.subheadline)
-                            TextField("com.example.app", text: $bundleId)
-                                .textFieldStyle(.roundedBorder)
+                            NSTextFieldWrapper(text: $bundleId, placeholder: "com.example.app")
+                                .frame(height: 22)
+                            Text("当前值: '\(bundleId)'")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
                         }
                         
                         VStack(alignment: .leading, spacing: 8) {
@@ -123,8 +126,8 @@ struct LocalSignView: View {
                             }
                             
                             if selectedCertificate == nil {
-                                TextField("或手动输入Developer ID", text: $developerId)
-                                    .textFieldStyle(.roundedBorder)
+                                NSTextFieldWrapper(text: $developerId, placeholder: "或手动输入Developer ID")
+                                    .frame(height: 22)
                             } else {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("使用证书:")
@@ -148,8 +151,11 @@ struct LocalSignView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Device UUID")
                                 .font(.subheadline)
-                            TextField("设备UUID", text: $uuid)
-                                .textFieldStyle(.roundedBorder)
+                            NSTextFieldWrapper(text: $uuid, placeholder: "设备UUID")
+                                .frame(height: 22)
+                            Text("当前值: '\(uuid)'")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
                         }
                     }
                     .padding()
@@ -314,8 +320,8 @@ struct LocalSignView: View {
             
             // 底部按钮
             HStack {
-                Button("取消") {
-                    dismiss()
+                Button("关闭") {
+                    closeWindow()
                 }
                 .buttonStyle(.bordered)
                 .frame(width: 80)
@@ -332,9 +338,24 @@ struct LocalSignView: View {
             .padding()
             .background(Color(NSColor.controlBackgroundColor))
         }
-        .frame(width: 650, height: 600)
+        .frame(minWidth: 650, idealWidth: 650, maxWidth: 650, minHeight: 600, idealHeight: 600, maxHeight: 600)
+        .interactiveDismissDisabled(false)
         .onAppear {
+            print("[DEBUG] ========== LocalSignView appeared ==========")
+            print("[DEBUG] NSApp.keyWindow: \(String(describing: NSApp.keyWindow))")
+            print("[DEBUG] NSApp.mainWindow: \(String(describing: NSApp.mainWindow))")
+            
             loadCertificates()
+            
+            // 确保窗口可以接收键盘输入
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                print("[DEBUG] Attempting to set first responder")
+                print("[DEBUG] keyWindow after delay: \(String(describing: NSApp.keyWindow))")
+                print("[DEBUG] keyWindow acceptsFirstResponder: \(NSApp.keyWindow?.acceptsFirstResponder ?? false)")
+                print("[DEBUG] keyWindow canBecomeKey: \(NSApp.keyWindow?.canBecomeKey ?? false)")
+                NSApp.keyWindow?.makeFirstResponder(nil)
+                print("[DEBUG] First responder set")
+            }
         }
     }
     
@@ -352,6 +373,13 @@ struct LocalSignView: View {
                     print("[DEBUG] 证书 \(index): \(cert.displayName)")
                 }
             }
+        }
+    }
+    
+    private func closeWindow() {
+        // 关闭当前窗口
+        if let window = NSApp.keyWindow {
+            window.close()
         }
     }
     
