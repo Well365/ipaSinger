@@ -182,6 +182,172 @@ class SignerManager: ObservableObject {
         
         return body
     }
+    
+    // MARK: - 本地签名功能
+    
+    func signLocalIPA(ipaPath: String, bundleId: String, developerId: String, uuid: String) async throws -> SignResult {
+        addLog("[INFO] 开始本地IPA签名...")
+        addLog("[INFO] IPA路径: \(ipaPath)")
+        addLog("[INFO] Bundle ID: \(bundleId)")
+        addLog("[INFO] Developer ID: \(developerId)")
+        addLog("[INFO] Device UUID: \(uuid)")
+        
+        // 验证文件存在
+        guard FileManager.default.fileExists(atPath: ipaPath) else {
+            throw NSError(domain: "LocalSign", code: 1, userInfo: [NSLocalizedDescriptionKey: "IPA文件不存在"])
+        }
+        
+        // 验证凭证
+        guard let credential = currentCredential else {
+            throw NSError(domain: "LocalSign", code: 2, userInfo: [NSLocalizedDescriptionKey: "未找到Apple ID凭证，请先在设置中配置"])
+        }
+        
+        do {
+            // 确保登录
+            try await executor.ensureLogin(credential: credential)
+            addLog("[INFO] 凭证验证成功")
+            
+            // 注册设备
+            addLog("[INFO] 注册设备UUID: \(uuid)")
+            try await executor.registerUDID(uuid, bundleId: bundleId)
+            
+            // 创建签名选项
+            let resignOptions = ResignOptions(
+                provisioningProfileId: nil, // 使用默认的
+                teamId: nil, // 使用默认的
+                newBundleId: bundleId
+            )
+            
+            // 执行重签名
+            addLog("[INFO] 开始重签名...")
+            let outputURL = try await executor.resignLocalIPA(ipaPath: ipaPath, options: resignOptions)
+            
+            addLog("[INFO] 签名完成: \(outputURL.path)")
+            
+            return SignResult(
+                success: true,
+                message: "签名成功完成",
+                outputPath: outputURL.path
+            )
+            
+        } catch {
+            addLog("[ERROR] 本地签名失败: \(error)")
+            return SignResult(
+                success: false,
+                message: error.localizedDescription,
+                outputPath: nil
+            )
+        }
+    }
+    
+    // MARK: - 文件上传功能
+    
+    func uploadFile(filePath: String, uploadURL: String) async throws -> UploadResult {
+        addLog("[INFO] 开始上传文件...")
+        addLog("[INFO] 文件路径: \(filePath)")
+        addLog("[INFO] 上传URL: \(uploadURL)")
+        
+        // 验证文件存在
+        guard FileManager.default.fileExists(atPath: filePath) else {
+            throw NSError(domain: "Upload", code: 1, userInfo: [NSLocalizedDescriptionKey: "文件不存在"])
+        }
+        
+        // 验证URL
+        guard let url = URL(string: uploadURL) else {
+            throw NSError(domain: "Upload", code: 2, userInfo: [NSLocalizedDescriptionKey: "无效的上传URL"])
+        }
+        
+        do {
+            // 创建multipart/form-data请求
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            
+            let boundary = "Boundary-\(UUID().uuidString)"
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+            
+            let fileURL = URL(fileURLWithPath: filePath)
+            let data = try createMultipartBody(fileURL: fileURL, boundary: boundary)
+            request.httpBody = data
+            
+            // 执行上传
+            addLog("[INFO] 正在上传文件...")
+            let (responseData, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw NSError(domain: "Upload", code: 3, userInfo: [NSLocalizedDescriptionKey: "无效的响应"])
+            }
+            
+            if httpResponse.statusCode == 200 {
+                // 尝试解析响应获取下载链接
+                let responseString = String(data: responseData, encoding: .utf8) ?? ""
+                addLog("[INFO] 上传成功，响应: \(responseString)")
+                
+                // 尝试从响应中提取下载链接
+                let downloadURL = extractDownloadURL(from: responseString, baseURL: uploadURL)
+                
+                return UploadResult(
+                    success: true,
+                    message: "文件上传成功",
+                    downloadURL: downloadURL
+                )
+            } else {
+                let errorMessage = "上传失败，状态码: \(httpResponse.statusCode)"
+                addLog("[ERROR] \(errorMessage)")
+                return UploadResult(
+                    success: false,
+                    message: errorMessage,
+                    downloadURL: nil
+                )
+            }
+            
+        } catch {
+            addLog("[ERROR] 上传失败: \(error)")
+            return UploadResult(
+                success: false,
+                message: error.localizedDescription,
+                downloadURL: nil
+            )
+        }
+    }
+    
+    private func extractDownloadURL(from response: String, baseURL: String) -> String? {
+        // 尝试从响应中提取下载链接
+        // 这里可以根据你的服务器响应格式进行调整
+        
+        // 方法1: 查找JSON中的downloadURL字段
+        if let data = response.data(using: .utf8),
+           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+           let downloadURL = json["downloadURL"] as? String {
+            return downloadURL
+        }
+        
+        // 方法2: 查找JSON中的url字段
+        if let data = response.data(using: .utf8),
+           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+           let downloadURL = json["url"] as? String {
+            return downloadURL
+        }
+        
+        // 方法3: 查找JSON中的file字段
+        if let data = response.data(using: .utf8),
+           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+           let downloadURL = json["file"] as? String {
+            return downloadURL
+        }
+        
+        // 方法4: 如果响应直接是URL
+        if response.hasPrefix("http://") || response.hasPrefix("https://") {
+            return response
+        }
+        
+        // 方法5: 基于baseURL构造可能的下载链接
+        if let baseURL = URL(string: baseURL) {
+            let fileName = URL(fileURLWithPath: baseURL.path).lastPathComponent
+            return baseURL.appendingPathComponent("download/\(fileName)").absoluteString
+        }
+        
+        return nil
+    }
 }
 
 extension DateFormatter {

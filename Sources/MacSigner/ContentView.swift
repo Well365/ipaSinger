@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var signerManager: SignerManager
     @State private var showingSettings = false
+    @State private var showingLocalSign = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -16,6 +17,11 @@ struct ContentView: View {
                     .fontWeight(.bold)
                 
                 Spacer()
+                
+                Button("本地签名") {
+                    showingLocalSign = true
+                }
+                .buttonStyle(.bordered)
                 
                 Button("设置") {
                     showingSettings = true
@@ -94,6 +100,10 @@ struct ContentView: View {
         .frame(width: 600, height: 500)
         .sheet(isPresented: $showingSettings) {
             SettingsView()
+                .environmentObject(signerManager)
+        }
+        .sheet(isPresented: $showingLocalSign) {
+            LocalSignView()
                 .environmentObject(signerManager)
         }
     }

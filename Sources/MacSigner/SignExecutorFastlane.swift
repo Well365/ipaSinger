@@ -68,4 +68,24 @@ final class FastlaneSignExecutor: SignExecutor {
         else { throw SignError.notImplemented }
         return URL(fileURLWithPath: String(path))
     }
+    
+    func resignLocalIPA(ipaPath: String, options: ResignOptions?) async throws -> URL {
+        guard let cred = KeychainStore.loadCredential() else { throw SignError.missingCredential }
+        var env = baseEnv(credential: cred)
+        env["IPA_PATH"] = ipaPath
+        env["BUNDLE_ID"] = options?.newBundleId ?? "com.example.app"
+        if let team = options?.teamId { env["TEAM_ID"] = team }
+        if let pp = options?.provisioningProfileId, !pp.isEmpty {
+            env["PP_PATH"] = pp
+        }
+        let args = ["bundle", "exec", "fastlane", "resign_ipa"]
+        let res = try ProcessRunner.run(bundleExec, args, env: env, cwd: fastlaneDir) { Log.info($0.trimmingCharacters(in: .whitespacesAndNewlines)) }
+        guard res.exitCode == 0 else { throw SignError.notImplemented }
+
+        let out = res.stdout + "\n" + res.stderr
+        guard let line = out.split(separator: "\n").first(where: { $0.contains("RESIGNED_IPA_PATH=") }),
+              let path = line.split(separator: "=").last
+        else { throw SignError.notImplemented }
+        return URL(fileURLWithPath: String(path))
+    }
 }
