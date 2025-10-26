@@ -2,7 +2,8 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var signerManager: SignerManager
-    @State private var showingSettings = false
+    @State private var showingServerConfig = false
+    @State private var showingAppleCredential = false
     @State private var localSignWindowController: LocalSignWindowController?
     @State private var showingEnvironmentSetup = false
     
@@ -29,8 +30,13 @@ struct ContentView: View {
                 }
                 .buttonStyle(.bordered)
                 
-                Button("设置") {
-                    showingSettings = true
+                Button("服务器配置") {
+                    showingServerConfig = true
+                }
+                .buttonStyle(.bordered)
+                
+                Button("Apple ID") {
+                    showingAppleCredential = true
                 }
                 .buttonStyle(.bordered)
             }
@@ -115,8 +121,12 @@ struct ContentView: View {
         }
         .padding()
         .frame(width: 600, height: 500)
-        .sheet(isPresented: $showingSettings) {
-            SettingsView()
+        .sheet(isPresented: $showingServerConfig) {
+            ServerConfigView()
+                .environmentObject(signerManager)
+        }
+        .sheet(isPresented: $showingAppleCredential) {
+            AppleCredentialView()
                 .environmentObject(signerManager)
         }
         .sheet(isPresented: $showingEnvironmentSetup) {
