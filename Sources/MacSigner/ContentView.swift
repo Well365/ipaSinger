@@ -4,6 +4,7 @@ struct ContentView: View {
     @EnvironmentObject private var signerManager: SignerManager
     @State private var showingSettings = false
     @State private var localSignWindowController: LocalSignWindowController?
+    @State private var showingEnvironmentSetup = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -20,6 +21,11 @@ struct ContentView: View {
                 
                 Button("本地签名") {
                     openLocalSignWindow()
+                }
+                .buttonStyle(.bordered)
+                
+                Button("环境安装") {
+                    showingEnvironmentSetup = true
                 }
                 .buttonStyle(.bordered)
                 
@@ -112,6 +118,9 @@ struct ContentView: View {
         .sheet(isPresented: $showingSettings) {
             SettingsView()
                 .environmentObject(signerManager)
+        }
+        .sheet(isPresented: $showingEnvironmentSetup) {
+            EnvironmentSetupView()
         }
     }
     

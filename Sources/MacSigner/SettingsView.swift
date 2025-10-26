@@ -19,7 +19,7 @@ struct SettingsView: View {
         VStack(spacing: 0) {
             // 标题栏
             HStack {
-                Text("服务器配置")
+                Text("设置")
                     .font(.title2)
                     .fontWeight(.bold)
                 Spacer()
@@ -29,91 +29,15 @@ struct SettingsView: View {
             
             Divider()
             
-            // 内容区域
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    // 服务器配置部分
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("服务器配置")
-                            .font(.headline)
-                            .foregroundColor(.primary)
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("服务器地址")
-                                .font(.subheadline)
-                            NSTextFieldWrapper(text: $serverURL, placeholder: "https://your-server.com")
-                                .frame(height: 22)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("API Token")
-                                .font(.subheadline)
-                            NSTextFieldWrapper(text: $apiToken, placeholder: "your-api-token")
-                                .frame(height: 22)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("轮询间隔(秒)")
-                                .font(.subheadline)
-                            NSTextFieldWrapper(text: $pollInterval, placeholder: "10")
-                                .frame(height: 22)
-                        }
-                    }
-                    .padding()
-                    .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
-                    .cornerRadius(8)
-                    
-                    // Apple ID 凭证部分
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Apple ID 凭证")
-                            .font(.headline)
-                            .foregroundColor(.primary)
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Apple ID")
-                                .font(.subheadline)
-                            NSTextFieldWrapper(text: $appleId, placeholder: "your-apple-id@example.com")
-                                .frame(height: 22)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Session Token (可选)")
-                                .font(.subheadline)
-                            NSTextFieldWrapper(text: $sessionToken, placeholder: "session-token")
-                                .frame(height: 22)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("P12 证书路径")
-                                .font(.subheadline)
-                            HStack {
-                                NSTextFieldWrapper(text: $p12Path, placeholder: "证书文件路径")
-                                    .frame(height: 22)
-                                
-                                Button("选择文件") {
-                                    selectP12File()
-                                }
-                                .buttonStyle(.bordered)
-                            }
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("P12 密码")
-                                .font(.subheadline)
-                            NSTextFieldWrapper(text: $p12Password, placeholder: "证书密码", isSecure: true)
-                                .frame(height: 22)
-                        }
-                    }
-                    .padding()
-                    .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
-                    .cornerRadius(8)
+                    configurationContent
                 }
                 .padding()
             }
             
             Divider()
             
-            // 底部按钮
             HStack {
                 Button("取消") {
                     dismiss()
@@ -133,12 +57,62 @@ struct SettingsView: View {
             .padding()
             .background(Color(NSColor.controlBackgroundColor))
         }
-        .frame(width: 600, height: 500)
+        .frame(width: 700, height: 600)
         .onAppear {
             loadCurrentSettings()
         }
     }
     
+    // 配置内容视图
+    private var configurationContent: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("服务器配置")
+                    .font(.headline)
+                formField(title: "服务器地址", text: $serverURL, placeholder: "https://your-server.com")
+                formField(title: "API Token", text: $apiToken, placeholder: "your-api-token")
+                formField(title: "轮询间隔(秒)", text: $pollInterval, placeholder: "10")
+            }
+            .padding()
+            .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
+            .cornerRadius(8)
+            
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Apple ID 凭证")
+                    .font(.headline)
+                formField(title: "Apple ID", text: $appleId, placeholder: "your-apple-id@example.com")
+                formField(title: "Session Token (可选)", text: $sessionToken, placeholder: "session-token")
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("P12 证书路径")
+                        .font(.subheadline)
+                    HStack {
+                        NSTextFieldWrapper(text: $p12Path, placeholder: "证书文件路径")
+                            .frame(height: 22)
+                        Button("选择文件") { selectP12File() }
+                            .buttonStyle(.bordered)
+                    }
+                }
+                formField(title: "P12 密码", text: $p12Password, placeholder: "证书密码", isSecure: true)
+            }
+            .padding()
+            .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
+            .cornerRadius(8)
+        }
+    }
+    
+    private func formField(title: String,
+                           text: Binding<String>,
+                           placeholder: String,
+                           isSecure: Bool = false) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.subheadline)
+            NSTextFieldWrapper(text: text,
+                               placeholder: placeholder,
+                               isSecure: isSecure)
+                .frame(height: 22)
+        }
+    }
     private func loadCurrentSettings() {
         serverURL = signerManager.config.serverBaseURL.absoluteString
         apiToken = signerManager.config.apiToken
@@ -153,7 +127,6 @@ struct SettingsView: View {
     }
     
     private func saveSettings() {
-        // 保存服务器配置
         if let url = URL(string: serverURL), !apiToken.isEmpty,
            let interval = Int(pollInterval) {
             let newConfig = Config(
@@ -164,7 +137,6 @@ struct SettingsView: View {
             signerManager.updateConfig(newConfig)
         }
         
-        // 保存凭证
         if !appleId.isEmpty {
             let credential = LoginCredential(
                 appleId: appleId,
@@ -187,10 +159,8 @@ struct SettingsView: View {
         panel.canChooseDirectories = false
         panel.canChooseFiles = true
         
-        if panel.runModal() == .OK {
-            if let url = panel.url {
-                p12Path = url.path
-            }
+        if panel.runModal() == .OK, let url = panel.url {
+            p12Path = url.path
         }
     }
 }

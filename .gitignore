@@ -132,3 +132,7 @@ ehthumbs.db
 
 # App specific
 *.log
+
+# Bundle directory
+
+fastlane/vendor/
