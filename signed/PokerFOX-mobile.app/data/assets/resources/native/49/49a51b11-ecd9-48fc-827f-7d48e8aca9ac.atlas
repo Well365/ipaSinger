@@ -1,0 +1,76 @@
+
+stars.png
+size: 411,411
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/FT_feiting
+  rotate: false
+  xy: 2, 232
+  size: 234, 177
+  orig: 234, 177
+  offset: 0, 0
+  index: -1
+images/FT_g2
+  rotate: true
+  xy: 238, 232
+  size: 177, 103
+  orig: 178, 103
+  offset: 0, 0
+  index: -1
+images/FT_g4
+  rotate: false
+  xy: 276, 32
+  size: 60, 85
+  orig: 60, 85
+  offset: 0, 0
+  index: -1
+images/FT_hongg
+  rotate: false
+  xy: 338, 58
+  size: 58, 59
+  orig: 58, 59
+  offset: 0, 0
+  index: -1
+images/FT_penqi
+  rotate: false
+  xy: 2, 128
+  size: 278, 102
+  orig: 278, 102
+  offset: 0, 0
+  index: -1
+images/FT_tiqiu
+  rotate: false
+  xy: 2, 2
+  size: 182, 124
+  orig: 182, 124
+  offset: 0, 0
+  index: -1
+images/FT_xingkong
+  rotate: true
+  xy: 186, 7
+  size: 119, 88
+  orig: 119, 88
+  offset: 0, 0
+  index: -1
+images/FT_xuang
+  rotate: false
+  xy: 338, 15
+  size: 65, 41
+  orig: 65, 41
+  offset: 0, 0
+  index: -1
+images/FT_xuanwo
+  rotate: false
+  xy: 282, 119
+  size: 104, 111
+  orig: 104, 118
+  offset: 0, 0
+  index: -1
+images/FT_zhixian
+  rotate: true
+  xy: 343, 266
+  size: 143, 45
+  orig: 143, 45
+  offset: 0, 0
+  index: -1

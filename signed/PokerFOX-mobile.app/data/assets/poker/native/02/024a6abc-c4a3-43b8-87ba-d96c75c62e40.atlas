@@ -1,0 +1,83 @@
+
+jinjietexiao.png
+size: 736,1050
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+diguang
+  rotate: false
+  xy: 516, 579
+  size: 200, 202
+  orig: 200, 202
+  offset: 0, 0
+  index: -1
+guangquan_jin
+  rotate: false
+  xy: 2, 536
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+jinb/01
+  rotate: false
+  xy: 622, 144
+  size: 59, 58
+  orig: 70, 70
+  offset: 7, 5
+  index: -1
+lang
+  rotate: true
+  xy: 2, 2
+  size: 532, 185
+  orig: 532, 186
+  offset: 0, 0
+  index: -1
+shengji/BJtx
+  rotate: false
+  xy: 491, 286
+  size: 243, 248
+  orig: 243, 248
+  offset: 0, 0
+  index: -1
+shengji/ZJA_txa
+  rotate: false
+  xy: 491, 155
+  size: 129, 129
+  orig: 140, 140
+  offset: 5, 6
+  index: -1
+shengji/ZJA_txb
+  rotate: false
+  xy: 622, 204
+  size: 70, 80
+  orig: 102, 110
+  offset: 15, 15
+  index: -1
+shengji/ZJA_txc
+  rotate: false
+  xy: 491, 100
+  size: 53, 53
+  orig: 64, 64
+  offset: 5, 6
+  index: -1
+shengji/big_luoguang
+  rotate: false
+  xy: 189, 96
+  size: 300, 438
+  orig: 512, 512
+  offset: 100, 27
+  index: -1
+shengji/gyun
+  rotate: true
+  xy: 516, 783
+  size: 265, 209
+  orig: 281, 255
+  offset: 15, 21
+  index: -1
+shengji/niug
+  rotate: false
+  xy: 189, 4
+  size: 328, 90
+  orig: 331, 90
+  offset: 0, 0
+  index: -1

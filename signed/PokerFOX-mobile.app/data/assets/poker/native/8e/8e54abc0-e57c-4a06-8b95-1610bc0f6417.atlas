@@ -1,0 +1,27 @@
+
+jszy.png
+size: 179,179
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/er1
+  rotate: true
+  xy: 140, 100
+  size: 77, 37
+  orig: 78, 37
+  offset: 1, 0
+  index: -1
+images/er2
+  rotate: true
+  xy: 140, 29
+  size: 69, 37
+  orig: 69, 37
+  offset: 0, 0
+  index: -1
+images/lutou
+  rotate: false
+  xy: 2, 5
+  size: 136, 172
+  orig: 136, 172
+  offset: 0, 0
+  index: -1

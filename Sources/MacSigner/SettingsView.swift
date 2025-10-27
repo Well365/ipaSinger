@@ -132,7 +132,10 @@ struct SettingsView: View {
             let newConfig = Config(
                 serverBaseURL: url,
                 apiToken: apiToken,
-                pollIntervalSec: interval
+                pollIntervalSec: interval,
+                appleAPIKeyID: "",
+                appleAPIIssuerID: "",
+                appleAPIPrivateKey: ""
             )
             signerManager.updateConfig(newConfig)
         }

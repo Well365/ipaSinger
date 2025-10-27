@@ -17,7 +17,14 @@ platform :ios do
       app_store_connect_api_key(api_key: api_key)
     else
       UI.message("Using Apple ID/Session login")
-      login
+      # Verify session or credentials are available
+      if ENV["FASTLANE_SESSION"]
+        UI.message("Using FASTLANE_SESSION")
+      elsif ENV["FASTLANE_USER"] && ENV["FASTLANE_PASSWORD"]
+        UI.message("Using FASTLANE_USER and FASTLANE_PASSWORD")
+      else
+        UI.user_error!("No valid credentials found. Set FASTLANE_SESSION or FASTLANE_USER/FASTLANE_PASSWORD")
+      end
     end
     UI.message("Login verified")
   end
@@ -91,7 +98,8 @@ platform :ios do
         skip_certificate_verification: true,
         ignore_profiles_with_different_name: true,
         filename: "adhoc_#{ENV['BUNDLE_ID']}.mobileprovision",
-        output_path: out_dir
+        output_path: out_dir,
+        certificate_types: ["IOS_DEVELOPMENT"]
       )
       pp_path = profile_path
     end

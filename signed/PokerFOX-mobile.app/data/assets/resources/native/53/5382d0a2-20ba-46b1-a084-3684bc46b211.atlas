@@ -1,0 +1,69 @@
+
+king.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/KJ_Guang
+  rotate: true
+  xy: 434, 1007
+  size: 363, 297
+  orig: 384, 364
+  offset: 5, 32
+  index: -1
+images/KJ_baidi
+  rotate: false
+  xy: 2, 1372
+  size: 750, 636
+  orig: 750, 702
+  offset: 0, 0
+  index: -1
+images/KJ_diandian
+  rotate: false
+  xy: 754, 1456
+  size: 624, 552
+  orig: 630, 645
+  offset: 6, 13
+  index: -1
+images/KJ_feiji
+  rotate: false
+  xy: 754, 1151
+  size: 585, 303
+  orig: 585, 303
+  offset: 0, 0
+  index: -1
+images/KJ_yun1
+  rotate: false
+  xy: 2, 1095
+  size: 430, 275
+  orig: 430, 275
+  offset: 0, 0
+  index: -1
+images/KJ_yun2
+  rotate: false
+  xy: 1341, 1011
+  size: 539, 274
+  orig: 539, 274
+  offset: 0, 0
+  index: -1
+images/KJ_yun3
+  rotate: true
+  xy: 1380, 1287
+  size: 721, 425
+  orig: 721, 425
+  offset: 0, 0
+  index: -1
+images/KJ_yun4
+  rotate: true
+  xy: 1807, 1663
+  size: 345, 201
+  orig: 345, 201
+  offset: 0, 0
+  index: -1
+images/XX
+  rotate: false
+  xy: 1807, 1583
+  size: 80, 78
+  orig: 110, 101
+  offset: 26, 8
+  index: -1

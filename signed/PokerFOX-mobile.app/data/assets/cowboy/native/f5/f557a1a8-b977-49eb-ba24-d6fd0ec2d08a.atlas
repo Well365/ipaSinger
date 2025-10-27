@@ -1,0 +1,48 @@
+
+skeleton.png
+size: 964,964
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+特效动画/7
+  rotate: false
+  xy: 145, 859
+  size: 205, 103
+  orig: 205, 103
+  offset: 0, 0
+  index: -1
+特效动画/saoguang
+  rotate: false
+  xy: 352, 706
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+特效动画/star
+  rotate: false
+  xy: 2, 898
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+特效动画/牛仔美女胜平局/牛仔胜
+  rotate: false
+  xy: 2, 518
+  size: 902, 186
+  orig: 909, 189
+  offset: 3, 3
+  index: -1
+特效动画/牛仔美女胜平局/牛仔胜底条
+  rotate: false
+  xy: 2, 302
+  size: 960, 214
+  orig: 960, 214
+  offset: 0, 0
+  index: -1
+特效动画/牛仔美女胜平局/美女胜彩条
+  rotate: false
+  xy: 68, 898
+  size: 75, 64
+  orig: 82, 69
+  offset: 3, 3
+  index: -1

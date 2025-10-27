@@ -1,0 +1,20 @@
+
+skeleton.png
+size: 414,414
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+特效动画/circle2
+  rotate: false
+  xy: 2, 98
+  size: 107, 107
+  orig: 130, 130
+  offset: 11, 11
+  index: -1
+特效动画/redstarline
+  rotate: false
+  xy: 2, 207
+  size: 410, 205
+  orig: 410, 205
+  offset: 0, 0
+  index: -1

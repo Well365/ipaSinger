@@ -1,0 +1,48 @@
+
+wbsh.png
+size: 257,202
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/di
+  rotate: true
+  xy: 2, 27
+  size: 173, 175
+  orig: 173, 175
+  offset: 0, 0
+  index: -1
+images/lalian
+  rotate: false
+  xy: 2, 2
+  size: 145, 23
+  orig: 145, 23
+  offset: 0, 0
+  index: -1
+images/lalianyz
+  rotate: true
+  xy: 179, 38
+  size: 162, 35
+  orig: 162, 45
+  offset: 0, 7
+  index: -1
+images/lasuo
+  rotate: true
+  xy: 179, 13
+  size: 23, 31
+  orig: 23, 31
+  offset: 0, 0
+  index: -1
+images/yj1
+  rotate: false
+  xy: 216, 118
+  size: 38, 40
+  orig: 38, 40
+  offset: 0, 0
+  index: -1
+images/yj2
+  rotate: false
+  xy: 216, 160
+  size: 39, 40
+  orig: 39, 40
+  offset: 0, 0
+  index: -1

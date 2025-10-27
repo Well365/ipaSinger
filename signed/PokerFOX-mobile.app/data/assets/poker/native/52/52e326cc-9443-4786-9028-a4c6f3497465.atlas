@@ -1,0 +1,62 @@
+
+mwt.png
+size: 198,198
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/er1
+  rotate: false
+  xy: 2, 2
+  size: 40, 34
+  orig: 40, 34
+  offset: 0, 0
+  index: -1
+images/er2
+  rotate: false
+  xy: 44, 3
+  size: 41, 33
+  orig: 41, 33
+  offset: 0, 0
+  index: -1
+images/sh1
+  rotate: true
+  xy: 159, 4
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: -1
+images/sh2
+  rotate: true
+  xy: 176, 4
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: -1
+images/yan1
+  rotate: true
+  xy: 123, 4
+  size: 32, 34
+  orig: 32, 34
+  offset: 0, 0
+  index: -1
+images/yan2
+  rotate: true
+  xy: 87, 3
+  size: 33, 34
+  orig: 33, 34
+  offset: 0, 0
+  index: -1
+images/yangtou
+  rotate: false
+  xy: 2, 38
+  size: 170, 158
+  orig: 170, 158
+  offset: 0, 0
+  index: -1
+images/zui
+  rotate: false
+  xy: 159, 20
+  size: 22, 16
+  orig: 22, 16
+  offset: 0, 0
+  index: -1

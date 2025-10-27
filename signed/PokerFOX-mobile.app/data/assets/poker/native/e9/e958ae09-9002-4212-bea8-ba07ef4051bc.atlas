@@ -1,0 +1,97 @@
+
+cheers.png
+size: 523,523
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/bsheg
+  rotate: false
+  xy: 2, 250
+  size: 318, 271
+  orig: 412, 271
+  offset: 41, 0
+  index: -1
+images/ganbei_1
+  rotate: true
+  xy: 322, 400
+  size: 121, 131
+  orig: 121, 131
+  offset: 0, 0
+  index: -1
+images/ganbei_2
+  rotate: false
+  xy: 322, 265
+  size: 107, 133
+  orig: 107, 133
+  offset: 0, 0
+  index: -1
+images/paomo_01
+  rotate: false
+  xy: 513, 493
+  size: 4, 3
+  orig: 4, 3
+  offset: 0, 0
+  index: -1
+images/paomo_02
+  rotate: true
+  xy: 455, 435
+  size: 86, 56
+  orig: 86, 56
+  offset: 0, 0
+  index: -1
+images/paomo_03
+  rotate: false
+  xy: 513, 498
+  size: 5, 4
+  orig: 5, 4
+  offset: 0, 0
+  index: -1
+images/paomo_05
+  rotate: false
+  xy: 513, 498
+  size: 5, 4
+  orig: 5, 4
+  offset: 0, 0
+  index: -1
+images/paomo_04
+  rotate: false
+  xy: 455, 389
+  size: 54, 44
+  orig: 56, 45
+  offset: 1, 1
+  index: -1
+images/paomo_06
+  rotate: false
+  xy: 513, 504
+  size: 8, 7
+  orig: 8, 7
+  offset: 0, 0
+  index: -1
+images/paomo_07
+  rotate: false
+  xy: 513, 513
+  size: 8, 8
+  orig: 9, 8
+  offset: 0, 0
+  index: -1
+images/paomo_08
+  rotate: false
+  xy: 511, 423
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+images/paomo_09
+  rotate: true
+  xy: 431, 290
+  size: 97, 73
+  orig: 98, 74
+  offset: 1, 0
+  index: -1
+images/qipao
+  rotate: false
+  xy: 431, 253
+  size: 35, 35
+  orig: 45, 43
+  offset: 5, 4
+  index: -1

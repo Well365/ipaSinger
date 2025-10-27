@@ -1,0 +1,55 @@
+
+rich.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/CP_4
+  rotate: false
+  xy: 2, 139
+  size: 352, 372
+  orig: 352, 372
+  offset: 0, 0
+  index: -1
+images/CP_5
+  rotate: false
+  xy: 2, 513
+  size: 472, 509
+  orig: 483, 512
+  offset: 0, 3
+  index: -1
+images/CP_6
+  rotate: true
+  xy: 2, 30
+  size: 107, 147
+  orig: 107, 147
+  offset: 0, 0
+  index: -1
+images/CP_7
+  rotate: true
+  xy: 151, 2
+  size: 135, 90
+  orig: 135, 91
+  offset: 0, 1
+  index: -1
+images/CP_8
+  rotate: false
+  xy: 349, 16
+  size: 85, 121
+  orig: 85, 121
+  offset: 0, 0
+  index: -1
+images/CP_9
+  rotate: true
+  xy: 243, 27
+  size: 110, 104
+  orig: 110, 104
+  offset: 0, 0
+  index: -1
+images/XX
+  rotate: true
+  xy: 356, 431
+  size: 80, 78
+  orig: 110, 101
+  offset: 26, 8
+  index: -1

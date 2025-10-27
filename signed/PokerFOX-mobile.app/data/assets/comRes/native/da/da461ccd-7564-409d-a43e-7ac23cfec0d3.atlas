@@ -1,0 +1,111 @@
+
+skeleton.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+xl_000
+  rotate: false
+  xy: 520, 251
+  size: 249, 251
+  orig: 300, 300
+  offset: 30, 27
+  index: -1
+xl_001
+  rotate: false
+  xy: 1279, 3
+  size: 245, 248
+  orig: 300, 300
+  offset: 29, 27
+  index: -1
+xl_002
+  rotate: false
+  xy: 1526, 4
+  size: 244, 247
+  orig: 300, 300
+  offset: 29, 27
+  index: -1
+xl_003
+  rotate: false
+  xy: 771, 2
+  size: 243, 248
+  orig: 300, 300
+  offset: 28, 28
+  index: -1
+xl_004
+  rotate: false
+  xy: 1772, 4
+  size: 243, 247
+  orig: 300, 300
+  offset: 28, 29
+  index: -1
+xl_005
+  rotate: false
+  xy: 520, 6
+  size: 247, 243
+  orig: 300, 300
+  offset: 26, 28
+  index: -1
+xl_006
+  rotate: false
+  xy: 265, 4
+  size: 252, 244
+  orig: 300, 300
+  offset: 24, 24
+  index: -1
+xl_007
+  rotate: false
+  xy: 1016, 8
+  size: 257, 242
+  orig: 300, 300
+  offset: 22, 19
+  index: -1
+xl_008
+  rotate: false
+  xy: 2, 2
+  size: 258, 243
+  orig: 300, 300
+  offset: 21, 18
+  index: -1
+xl_009
+  rotate: false
+  xy: 1279, 253
+  size: 261, 249
+  orig: 300, 300
+  offset: 19, 17
+  index: -1
+xl_010
+  rotate: false
+  xy: 2, 247
+  size: 261, 255
+  orig: 300, 300
+  offset: 19, 17
+  index: -1
+xl_011
+  rotate: false
+  xy: 1542, 253
+  size: 261, 249
+  orig: 300, 300
+  offset: 17, 26
+  index: -1
+xl_012
+  rotate: false
+  xy: 771, 252
+  size: 256, 250
+  orig: 300, 300
+  offset: 21, 27
+  index: -1
+xl_013
+  rotate: false
+  xy: 265, 250
+  size: 253, 252
+  orig: 300, 300
+  offset: 25, 26
+  index: -1
+xl_014
+  rotate: false
+  xy: 1029, 252
+  size: 248, 250
+  orig: 300, 300
+  offset: 31, 29
+  index: -1

@@ -70,6 +70,28 @@ struct LocalSignView: View {
                             .font(.headline)
                             .foregroundColor(.primary)
                         
+                        // Apple ID凭证状态检查
+                        if signerManager.currentCredential == nil {
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .foregroundColor(.orange)
+                                    Text("未配置Apple ID凭证")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.orange)
+                                }
+                                
+                                Text("请先在主界面点击「Apple ID」按钮配置开发者凭证，包括Apple ID、Session Token和P12证书信息。")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.leading)
+                            }
+                            .padding()
+                            .background(Color.orange.opacity(0.1))
+                            .cornerRadius(6)
+                        }
+                        
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Bundle ID")
                                 .font(.subheadline)
@@ -328,6 +350,13 @@ struct LocalSignView: View {
                 
                 Spacer()
                 
+                Button("使用Apple API签名") {
+                    startAppleAPISign()
+                }
+                .buttonStyle(.borderedProminent)
+                .frame(width: 150)
+                .disabled(selectedIPAPath.isEmpty || bundleId.isEmpty || uuid.isEmpty || isSigning)
+                
                 Button("开始签名") {
                     startSigning()
                 }
@@ -469,6 +498,86 @@ struct LocalSignView: View {
             } catch {
                 await MainActor.run {
                     self.signResult = SignResult(success: false, message: error.localizedDescription, outputPath: nil)
+                    self.isSigning = false
+                }
+            }
+        }
+    }
+    
+    private func startAppleAPISign() {
+        guard !selectedIPAPath.isEmpty,
+              !bundleId.isEmpty,
+              !uuid.isEmpty else {
+            return
+        }
+        
+        isSigning = true
+        signProgress = "使用Apple API准备签名..."
+        signResult = nil
+        uploadResult = nil
+        
+        Task {
+            do {
+                // 使用Apple API签名器
+                let config = Config.load()
+                let apiSignExecutor = AppleAPISignExecutor(config: config)
+                
+                await MainActor.run {
+                    self.signProgress = "正在使用Apple Developer API进行签名..."
+                }
+                
+                try await withCheckedThrowingContinuation { continuation in
+                    Task {
+                        await apiSignExecutor.resignIPA(
+                            ipaPath: selectedIPAPath,
+                            udid: uuid,
+                            bundleID: bundleId
+                        )
+                        continuation.resume()
+                    }
+                }
+                
+                await MainActor.run {
+                    self.signResult = SignResult(
+                        success: true,
+                        message: "Apple API签名完成",
+                        outputPath: selectedIPAPath.replacingOccurrences(of: ".ipa", with: "-resigned.ipa")
+                    )
+                    self.isSigning = false
+                }
+                
+                // 如果启用了上传，则上传文件
+                if enableUpload, !uploadURL.isEmpty {
+                    await MainActor.run {
+                        self.isUploading = true
+                        self.uploadProgress = "准备上传..."
+                    }
+                    
+                    do {
+                        let uploadResult = try await signerManager.uploadFile(
+                            filePath: selectedIPAPath.replacingOccurrences(of: ".ipa", with: "-resigned.ipa"),
+                            uploadURL: uploadURL
+                        )
+                        
+                        await MainActor.run {
+                            self.uploadResult = uploadResult
+                            self.isUploading = false
+                        }
+                    } catch {
+                        await MainActor.run {
+                            self.uploadResult = UploadResult(success: false, message: error.localizedDescription, downloadURL: nil)
+                            self.isUploading = false
+                        }
+                    }
+                }
+                
+            } catch {
+                await MainActor.run {
+                    self.signResult = SignResult(
+                        success: false,
+                        message: "Apple API签名失败: \(error.localizedDescription)",
+                        outputPath: nil
+                    )
                     self.isSigning = false
                 }
             }

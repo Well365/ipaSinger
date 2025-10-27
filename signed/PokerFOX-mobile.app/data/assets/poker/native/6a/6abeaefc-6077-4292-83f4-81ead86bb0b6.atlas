@@ -1,0 +1,48 @@
+
+xkwdp.png
+size: 311,177
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/5shetou
+  rotate: true
+  xy: 179, 103
+  size: 72, 69
+  orig: 72, 69
+  offset: 0, 0
+  index: -1
+images/5youyan
+  rotate: false
+  xy: 179, 2
+  size: 55, 32
+  orig: 72, 32
+  offset: 0, 0
+  index: -1
+images/5zui
+  rotate: false
+  xy: 179, 36
+  size: 130, 65
+  orig: 130, 65
+  offset: 0, 0
+  index: -1
+images/5zuoyan
+  rotate: false
+  xy: 250, 129
+  size: 45, 46
+  orig: 45, 46
+  offset: 0, 0
+  index: -1
+images/5zuoyanzhu
+  rotate: false
+  xy: 250, 107
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+images/di
+  rotate: true
+  xy: 2, 2
+  size: 173, 175
+  orig: 173, 175
+  offset: 0, 0
+  index: -1

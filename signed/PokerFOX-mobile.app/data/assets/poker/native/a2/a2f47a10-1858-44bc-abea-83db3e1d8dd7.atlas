@@ -1,0 +1,132 @@
+
+hudong_xianhua.png
+size: 549,1030
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/dig
+  rotate: false
+  xy: 2, 698
+  size: 330, 330
+  orig: 399, 368
+  offset: 35, 5
+  index: -1
+images/gen
+  rotate: false
+  xy: 376, 5
+  size: 99, 98
+  orig: 102, 98
+  offset: 0, 0
+  index: -1
+images/hbbg
+  rotate: false
+  xy: 2, 205
+  size: 260, 229
+  orig: 264, 230
+  offset: 4, 0
+  index: -1
+images/hua
+  rotate: true
+  xy: 376, 105
+  size: 150, 134
+  orig: 150, 134
+  offset: 0, 0
+  index: -1
+images/huab1
+  rotate: true
+  xy: 482, 531
+  size: 87, 59
+  orig: 87, 59
+  offset: 0, 0
+  index: -1
+images/huab2
+  rotate: true
+  xy: 264, 206
+  size: 49, 64
+  orig: 49, 64
+  offset: 0, 0
+  index: -1
+images/huab3
+  rotate: true
+  xy: 436, 257
+  size: 51, 37
+  orig: 51, 38
+  offset: 0, 0
+  index: -1
+images/jluj/jluj_00
+  rotate: true
+  xy: 436, 310
+  size: 136, 111
+  orig: 252, 355
+  offset: 102, 184
+  index: -1
+images/jluj/jluj_01
+  rotate: false
+  xy: 334, 620
+  size: 210, 188
+  orig: 252, 355
+  offset: 12, 97
+  index: -1
+images/jluj/jluj_02
+  rotate: false
+  xy: 334, 810
+  size: 197, 218
+  orig: 252, 355
+  offset: 0, 39
+  index: -1
+images/jluj/jluj_03
+  rotate: true
+  xy: 216, 2
+  size: 201, 158
+  orig: 252, 355
+  offset: 0, 38
+  index: -1
+images/jluj/jluj_04
+  rotate: false
+  xy: 2, 3
+  size: 212, 200
+  orig: 252, 355
+  offset: 0, 38
+  index: -1
+images/jluj/jluj_05
+  rotate: true
+  xy: 284, 448
+  size: 170, 196
+  orig: 252, 355
+  offset: 42, 38
+  index: -1
+images/qlz
+  rotate: false
+  xy: 2, 436
+  size: 280, 260
+  orig: 334, 313
+  offset: 51, 47
+  index: -1
+images/shizg
+  rotate: false
+  xy: 475, 266
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+images/xianhua
+  rotate: false
+  xy: 264, 257
+  size: 170, 177
+  orig: 170, 177
+  offset: 0, 0
+  index: -1
+images/ye1
+  rotate: true
+  xy: 482, 462
+  size: 67, 57
+  orig: 67, 57
+  offset: 0, 0
+  index: -1
+images/ye2
+  rotate: true
+  xy: 284, 628
+  size: 68, 47
+  orig: 68, 47
+  offset: 0, 0
+  index: -1

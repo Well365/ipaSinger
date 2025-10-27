@@ -10,6 +10,7 @@ struct AppleCredentialView: View {
     @State private var sessionToken = ""
     @State private var p12Path = ""
     @State private var p12Password = ""
+    @State private var showingHelp = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -26,7 +27,16 @@ struct AppleCredentialView: View {
         }
         .frame(width: 560, height: 420)
         .background(Color(NSColor.controlBackgroundColor))
-        .onAppear { loadValues() }
+        .onAppear { 
+            loadValues()
+            // 确保窗口可以接收键盘输入
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                NSApp.keyWindow?.makeKeyAndOrderFront(nil)
+            }
+        }
+        .sheet(isPresented: $showingHelp) {
+            CredentialHelpView()
+        }
     }
     
     private var header: some View {
@@ -34,7 +44,13 @@ struct AppleCredentialView: View {
             Text("Apple 帐号设置")
                 .font(.title2)
                 .fontWeight(.bold)
+            
             Spacer()
+            
+            Button("获取指南") {
+                showingHelp = true
+            }
+            .buttonStyle(.bordered)
         }
         .padding()
     }
@@ -66,8 +82,8 @@ struct AppleCredentialView: View {
                 Text("P12 证书路径")
                     .font(.subheadline)
                 HStack {
-                    NSTextFieldWrapper(text: $p12Path, placeholder: "证书文件路径")
-                        .frame(height: 22)
+                    TextField("证书文件路径", text: $p12Path)
+                        .textFieldStyle(.roundedBorder)
                     Button("选择文件") { selectP12File() }
                         .buttonStyle(.bordered)
                 }
@@ -86,10 +102,17 @@ struct AppleCredentialView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.subheadline)
-            NSTextFieldWrapper(text: text,
-                               placeholder: placeholder,
-                               isSecure: isSecure)
-                .frame(height: 22)
+            
+            if isSecure {
+                SecureField(placeholder, text: text)
+                    .textFieldStyle(.roundedBorder)
+            } else {
+                TextField(placeholder, text: text)
+                    .textFieldStyle(.roundedBorder)
+            }
+        }
+        .onAppear {
+            print("[DEBUG] FormField appeared: \(title) = '\(text.wrappedValue)'")
         }
     }
     

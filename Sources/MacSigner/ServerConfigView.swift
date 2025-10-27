@@ -23,7 +23,13 @@ struct ServerConfigView: View {
         }
         .frame(width: 560, height: 420)
         .background(Color(NSColor.controlBackgroundColor))
-        .onAppear { loadValues() }
+        .onAppear { 
+            loadValues()
+            // 确保窗口可以接收键盘输入
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                NSApp.keyWindow?.makeKeyAndOrderFront(nil)
+            }
+        }
     }
     
     private var header: some View {
@@ -73,10 +79,17 @@ struct ServerConfigView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.subheadline)
-            NSTextFieldWrapper(text: text,
-                               placeholder: placeholder,
-                               isSecure: isSecure)
-                .frame(height: 22)
+            
+            if isSecure {
+                SecureField(placeholder, text: text)
+                    .textFieldStyle(.roundedBorder)
+            } else {
+                TextField(placeholder, text: text)
+                    .textFieldStyle(.roundedBorder)
+            }
+        }
+        .onAppear {
+            print("[DEBUG] FormField appeared: \(title) = '\(text.wrappedValue)'")
         }
     }
     
@@ -90,7 +103,10 @@ struct ServerConfigView: View {
         guard let url = URL(string: serverURL), !apiToken.isEmpty, let interval = Int(pollInterval) else { return }
         let newConfig = Config(serverBaseURL: url,
                                apiToken: apiToken,
-                               pollIntervalSec: interval)
+                               pollIntervalSec: interval,
+                               appleAPIKeyID: "",
+                               appleAPIIssuerID: "",
+                               appleAPIPrivateKey: "")
         signerManager.updateConfig(newConfig)
     }
 }

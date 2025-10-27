@@ -1,0 +1,10 @@
+/*
+ Localizable.strings
+ */
+
+"done" = "Done";
+"next" = "Next";
+"search" = "Search";
+"go" = "Go";
+"send" = "Send";
+"webview_floatbtn_tip"="Can be moved to other positions";

@@ -2,9 +2,12 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var signerManager: SignerManager
-    @State private var showingServerConfig = false
-    @State private var showingAppleCredential = false
+    @State private var showingInputTest = false
     @State private var localSignWindowController: LocalSignWindowController?
+    @State private var serverConfigWindowController: ServerConfigWindowController?
+    @State private var appleCredentialWindowController: AppleCredentialWindowController?
+    @State private var appleAPIConfigWindowController: NSWindowController?
+    @State private var addDeviceWindowController: AddDeviceWindowController?
     @State private var showingEnvironmentSetup = false
     
     var body: some View {
@@ -31,14 +34,25 @@ struct ContentView: View {
                 .buttonStyle(.bordered)
                 
                 Button("服务器配置") {
-                    showingServerConfig = true
+                    openServerConfigWindow()
                 }
                 .buttonStyle(.bordered)
                 
                 Button("Apple ID") {
-                    showingAppleCredential = true
+                    openAppleCredentialWindow()
                 }
                 .buttonStyle(.bordered)
+                
+                Button("Apple API") {
+                    openAppleAPIConfigWindow()
+                }
+                .buttonStyle(.bordered)
+                
+                Button("设备管理") {
+                    openAddDeviceWindow()
+                }
+                .buttonStyle(.bordered)
+               
             }
             .padding()
             
@@ -62,6 +76,15 @@ struct ContentView: View {
                     Text("Apple ID: \(credential.appleId)")
                         .font(.caption)
                         .foregroundColor(.secondary)
+                } else {
+                    HStack {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundColor(.orange)
+                            .font(.caption)
+                        Text("未配置Apple ID凭证，点击「Apple ID」按钮进行配置")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                    }
                 }
             }
             .padding()
@@ -121,13 +144,8 @@ struct ContentView: View {
         }
         .padding()
         .frame(width: 600, height: 500)
-        .sheet(isPresented: $showingServerConfig) {
-            ServerConfigView()
-                .environmentObject(signerManager)
-        }
-        .sheet(isPresented: $showingAppleCredential) {
-            AppleCredentialView()
-                .environmentObject(signerManager)
+        .sheet(isPresented: $showingInputTest) {
+            InputTestView()
         }
         .sheet(isPresented: $showingEnvironmentSetup) {
             EnvironmentSetupView()
@@ -169,6 +187,89 @@ struct ContentView: View {
         print("[DEBUG] Creating new window controller")
         let controller = LocalSignWindowController(signerManager: signerManager)
         localSignWindowController = controller
+        controller.show()
+    }
+    
+    private func openServerConfigWindow() {
+        print("[DEBUG] ========== Opening Server Config Window ==========")
+        
+        // 如果窗口控制器已存在，直接显示
+        if let controller = serverConfigWindowController {
+            print("[DEBUG] Server Config window controller already exists, showing window")
+            controller.show()
+            return
+        }
+        
+        // 创建新的窗口控制器
+        print("[DEBUG] Creating new Server Config window controller")
+        let controller = ServerConfigWindowController(signerManager: signerManager)
+        serverConfigWindowController = controller
+        controller.show()
+    }
+    
+    private func openAppleCredentialWindow() {
+        print("[DEBUG] ========== Opening Apple Credential Window ==========")
+        
+        // 如果窗口控制器已存在，直接显示
+        if let controller = appleCredentialWindowController {
+            print("[DEBUG] Apple Credential window controller already exists, showing window")
+            controller.show()
+            return
+        }
+        
+        // 创建新的窗口控制器
+        print("[DEBUG] Creating new Apple Credential window controller")
+        let controller = AppleCredentialWindowController(signerManager: signerManager)
+        appleCredentialWindowController = controller
+        controller.show()
+    }
+    
+    private func openAppleAPIConfigWindow() {
+        print("[DEBUG] ========== Opening Apple API Config Window ==========")
+        
+        // 如果窗口控制器已存在，直接显示
+        if let controller = appleAPIConfigWindowController {
+            print("[DEBUG] Apple API Config window controller already exists, showing window")
+            controller.showWindow(nil)
+            return
+        }
+        
+        // 创建新的窗口控制器
+        print("[DEBUG] Creating new Apple API Config window controller")
+        
+        let appleAPIConfigView = AppleAPIConfigView()
+        let hostingController = NSHostingController(rootView: appleAPIConfigView)
+        
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 600, height: 500),
+            styleMask: [.titled, .closable, .resizable],
+            backing: .buffered,
+            defer: false
+        )
+        
+        window.title = "Apple Developer API 配置"
+        window.contentViewController = hostingController
+        window.center()
+        
+        let controller = NSWindowController(window: window)
+        appleAPIConfigWindowController = controller
+        controller.showWindow(nil)
+    }
+    
+    private func openAddDeviceWindow() {
+        print("[DEBUG] ========== Opening Add Device Window ==========")
+        
+        // 如果窗口控制器已存在，直接显示
+        if let controller = addDeviceWindowController {
+            print("[DEBUG] Add Device window controller already exists, showing window")
+            controller.show()
+            return
+        }
+        
+        // 创建新的窗口控制器
+        print("[DEBUG] Creating new Add Device window controller")
+        let controller = AddDeviceWindowController()
+        addDeviceWindowController = controller
         controller.show()
     }
 }

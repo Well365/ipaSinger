@@ -1,0 +1,55 @@
+
+wtl.png
+size: 437,191
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/4mojing
+  rotate: false
+  xy: 179, 34
+  size: 198, 74
+  orig: 198, 74
+  offset: 0, 0
+  index: -1
+images/4mojingyz
+  rotate: false
+  xy: 179, 110
+  size: 204, 79
+  orig: 204, 79
+  offset: 0, 0
+  index: -1
+images/4xx
+  rotate: true
+  xy: 179, 2
+  size: 30, 31
+  orig: 30, 31
+  offset: 0, 0
+  index: -1
+images/4xx2
+  rotate: true
+  xy: 212, 2
+  size: 30, 31
+  orig: 30, 31
+  offset: 0, 0
+  index: -1
+images/4zui
+  rotate: true
+  xy: 385, 88
+  size: 101, 50
+  orig: 101, 50
+  offset: 0, 0
+  index: -1
+images/di
+  rotate: true
+  xy: 2, 16
+  size: 173, 175
+  orig: 173, 175
+  offset: 0, 0
+  index: -1
+images/gaoguang
+  rotate: false
+  xy: 379, 12
+  size: 46, 74
+  orig: 48, 74
+  offset: 1, 0
+  index: -1

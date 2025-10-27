@@ -82,7 +82,7 @@ class SignerManager: ObservableObject {
                 addLog("[ERROR] 凭证验证失败: \(error)")
             }
         } else {
-            addLog("[WARN] 未找到凭证，请在设置中配置")
+            addLog("[WARN] 未找到凭证，请在Apple ID配置中设置")
         }
         
         while !Task.isCancelled && isRunning {
@@ -185,44 +185,160 @@ class SignerManager: ObservableObject {
     
     // MARK: - 本地签名功能
     
+    private func checkFastlaneEnvironment() async {
+        addLog("[DEBUG] 检查fastlane环境...")
+        
+        // 检查Ruby版本
+        do {
+            let rubyResult = try ProcessRunner.run("/usr/bin/which", ["ruby"])
+            addLog("[DEBUG] Ruby路径: \(rubyResult.stdout.trimmingCharacters(in: .whitespacesAndNewlines))")
+            
+            let rubyVersionResult = try ProcessRunner.run("/usr/bin/ruby", ["--version"])
+            addLog("[DEBUG] Ruby版本: \(rubyVersionResult.stdout.trimmingCharacters(in: .whitespacesAndNewlines))")
+        } catch {
+            addLog("[WARN] 无法检查Ruby版本: \(error)")
+        }
+        
+        // 检查bundle命令
+        do {
+            let bundleResult = try ProcessRunner.run("/usr/bin/which", ["bundle"])
+            addLog("[DEBUG] Bundle路径: \(bundleResult.stdout.trimmingCharacters(in: .whitespacesAndNewlines))")
+        } catch {
+            addLog("[WARN] 无法找到bundle命令: \(error)")
+        }
+        
+        // 检查fastlane目录
+        let fastlaneDir = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("fastlane")
+        addLog("[DEBUG] Fastlane目录: \(fastlaneDir.path)")
+        
+        if FileManager.default.fileExists(atPath: fastlaneDir.path) {
+            addLog("[SUCCESS] ✓ Fastlane目录存在")
+            
+            // 检查Gemfile
+            let gemfilePath = fastlaneDir.appendingPathComponent("Gemfile").path
+            if FileManager.default.fileExists(atPath: gemfilePath) {
+                addLog("[SUCCESS] ✓ Gemfile存在")
+                
+                // 尝试检查bundle状态
+                do {
+                    let bundleCheckResult = try ProcessRunner.run("/usr/bin/env", ["bundle", "check"], cwd: fastlaneDir)
+                    if bundleCheckResult.exitCode == 0 {
+                        addLog("[SUCCESS] ✓ Bundle依赖已安装")
+                    } else {
+                        addLog("[WARN] Bundle依赖可能未安装: \(bundleCheckResult.stderr)")
+                    }
+                } catch {
+                    addLog("[WARN] 无法检查bundle状态: \(error)")
+                }
+            } else {
+                addLog("[ERROR] Gemfile不存在")
+            }
+            
+            // 检查Fastfile
+            let fastfilePath = fastlaneDir.appendingPathComponent("Fastfile").path
+            if FileManager.default.fileExists(atPath: fastfilePath) {
+                addLog("[SUCCESS] ✓ Fastfile存在")
+            } else {
+                addLog("[ERROR] Fastfile不存在")
+            }
+        } else {
+            addLog("[ERROR] Fastlane目录不存在")
+        }
+        
+        addLog("[DEBUG] 环境检查完成")
+    }
+    
     func signLocalIPA(ipaPath: String, bundleId: String, developerId: String, uuid: String) async throws -> SignResult {
-        addLog("[INFO] 开始本地IPA签名...")
+        addLog("[INFO] ========== 开始本地IPA签名 ==========")
         addLog("[INFO] IPA路径: \(ipaPath)")
         addLog("[INFO] Bundle ID: \(bundleId)")
         addLog("[INFO] Developer ID: \(developerId)")
         addLog("[INFO] Device UUID: \(uuid)")
         
+        // 预检查fastlane环境
+        addLog("[INFO] ========== 环境预检查 ==========")
+        await checkFastlaneEnvironment()
+        
         // 验证文件存在
+        addLog("[DEBUG] 验证IPA文件是否存在...")
         guard FileManager.default.fileExists(atPath: ipaPath) else {
+            addLog("[ERROR] IPA文件不存在: \(ipaPath)")
             throw NSError(domain: "LocalSign", code: 1, userInfo: [NSLocalizedDescriptionKey: "IPA文件不存在"])
+        }
+        addLog("[SUCCESS] ✓ IPA文件存在")
+        
+        // 检查文件大小
+        do {
+            let attributes = try FileManager.default.attributesOfItem(atPath: ipaPath)
+            let fileSize = attributes[.size] as? Int64 ?? 0
+            addLog("[INFO] IPA文件大小: \(fileSize) bytes (\(String(format: "%.2f", Double(fileSize) / 1024 / 1024)) MB)")
+        } catch {
+            addLog("[WARN] 无法获取文件大小: \(error)")
         }
         
         // 验证凭证
+        addLog("[DEBUG] 验证Apple ID凭证...")
         guard let credential = currentCredential else {
-            throw NSError(domain: "LocalSign", code: 2, userInfo: [NSLocalizedDescriptionKey: "未找到Apple ID凭证，请先在设置中配置"])
+            addLog("[ERROR] 未找到Apple ID凭证")
+            throw NSError(domain: "LocalSign", code: 2, userInfo: [NSLocalizedDescriptionKey: "未找到Apple ID凭证，请先在Apple ID配置中设置"])
         }
-        
+        addLog("[SUCCESS] ✓ 找到凭证: \(credential.appleId)")
+        addLog("[DEBUG] 凭证详情:")
+        addLog("[DEBUG]   Apple ID: \(credential.appleId)")
+        addLog("[DEBUG]   Session Token: \(credential.sessionToken != nil ? "已设置" : "未设置")")
+        addLog("[DEBUG]   P12 Path: \(credential.p12Path ?? "未设置")")
+        addLog("[DEBUG]   P12 Password: \(credential.p12Password != nil ? "已设置" : "未设置")")
+
         do {
-            // 确保登录
+            // 步骤1: 确保登录
+            addLog("[INFO] ========== 步骤1: 验证Apple Developer登录 ==========")
+            addLog("[DEBUG] 准备验证凭证...")
             try await executor.ensureLogin(credential: credential)
-            addLog("[INFO] 凭证验证成功")
+            addLog("[SUCCESS] ✓ 凭证验证成功")
             
-            // 注册设备
-            addLog("[INFO] 注册设备UUID: \(uuid)")
+            // 步骤2: 注册设备
+            addLog("[INFO] ========== 步骤2: 注册设备UUID ==========")
+            addLog("[DEBUG] 准备注册设备: \(uuid)")
+            addLog("[DEBUG] Bundle ID: \(bundleId)")
             try await executor.registerUDID(uuid, bundleId: bundleId)
+            addLog("[SUCCESS] ✓ 设备注册成功")
             
-            // 创建签名选项
+            // 步骤3: 创建签名选项
+            addLog("[INFO] ========== 步骤3: 准备签名选项 ==========")
             let resignOptions = ResignOptions(
                 provisioningProfileId: nil, // 使用默认的
                 teamId: nil, // 使用默认的
                 newBundleId: bundleId
             )
+            addLog("[DEBUG] 签名选项:")
+            addLog("[DEBUG]   新Bundle ID: \(bundleId)")
+            addLog("[DEBUG]   Team ID: 使用默认")
+            addLog("[DEBUG]   Provisioning Profile: 使用默认")
             
-            // 执行重签名
-            addLog("[INFO] 开始重签名...")
+            // 步骤4: 执行重签名
+            addLog("[INFO] ========== 步骤4: 执行IPA重签名 ==========")
+            addLog("[DEBUG] 调用 resignLocalIPA...")
+            addLog("[DEBUG] 输入IPA: \(ipaPath)")
             let outputURL = try await executor.resignLocalIPA(ipaPath: ipaPath, options: resignOptions)
             
-            addLog("[INFO] 签名完成: \(outputURL.path)")
+            addLog("[SUCCESS] ✓ 重签名完成")
+            addLog("[INFO] 输出路径: \(outputURL.path)")
+            
+            // 验证输出文件
+            if FileManager.default.fileExists(atPath: outputURL.path) {
+                do {
+                    let attributes = try FileManager.default.attributesOfItem(atPath: outputURL.path)
+                    let fileSize = attributes[.size] as? Int64 ?? 0
+                    addLog("[SUCCESS] ✓ 输出文件验证成功")
+                    addLog("[INFO] 输出文件大小: \(fileSize) bytes (\(String(format: "%.2f", Double(fileSize) / 1024 / 1024)) MB)")
+                } catch {
+                    addLog("[WARN] 无法获取输出文件大小: \(error)")
+                }
+            } else {
+                addLog("[ERROR] 输出文件不存在: \(outputURL.path)")
+            }
+            
+            addLog("[INFO] ========== 本地签名流程完成 ==========")
             
             return SignResult(
                 success: true,
@@ -231,7 +347,16 @@ class SignerManager: ObservableObject {
             )
             
         } catch {
-            addLog("[ERROR] 本地签名失败: \(error)")
+            addLog("[ERROR] ========== 签名流程失败 ==========")
+            addLog("[ERROR] 错误详情: \(error)")
+            addLog("[ERROR] 错误类型: \(type(of: error))")
+            
+            if let nsError = error as NSError? {
+                addLog("[ERROR] 错误域: \(nsError.domain)")
+                addLog("[ERROR] 错误代码: \(nsError.code)")
+                addLog("[ERROR] 用户信息: \(nsError.userInfo)")
+            }
+            
             return SignResult(
                 success: false,
                 message: error.localizedDescription,

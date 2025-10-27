@@ -39,18 +39,60 @@ APPLE_ID=your_apple_id@example.com \
 swift run MacSigner
 ```
 
-## Fastlane 鉴权（择一）
-- **推荐：ASC API Key**
-  ```bash
-  export ASC_KEY_ID=ABC1234567
-  export ASC_ISSUER_ID=11111111-2222-3333-4444-555555555555
-  export ASC_KEY_PATH=/abs/path/AuthKey_ABC1234567.p8
-  ```
-- **或 Apple ID / FASTLANE_SESSION**
-  ```bash
-  export FASTLANE_USER="your_apple_id@example.com"
-  export FASTLANE_SESSION="..."
-  ```
+## 🔑 Apple ID 凭证配置
+
+### 必需信息
+
+1. **Apple ID**: 您的Apple开发者账户邮箱
+2. **P12证书**: 用于代码签名的开发者证书
+3. **P12密码**: 导出P12文件时设置的密码
+4. **Session Token**: (可选) 避免频繁两步验证
+
+### 快速获取步骤
+
+#### 1. Apple ID
+
+- 使用您注册Apple Developer Program的邮箱地址
+- 登录 [Apple Developer Console](https://developer.apple.com) 查看
+
+#### 2. P12证书获取
+
+```bash
+# 方法1: 钥匙串访问图形界面
+1. 打开「钥匙串访问」→ 证书助理 → 从证书颁发机构请求证书
+2. 填写邮箱和姓名，保存CSR文件
+3. 在Apple Developer Console创建证书，上传CSR
+4. 下载.cer文件，双击安装
+5. 在钥匙串中导出为.p12格式
+
+# 方法2: 使用现有证书
+如果已有开发者证书，直接在钥匙串中导出为.p12格式
+```
+
+#### 3. Session Token获取 (推荐)
+
+```bash
+# 安装fastlane
+gem install fastlane
+
+# 获取session token
+fastlane spaceauth -u your-apple-id@example.com
+# 按提示完成两步验证，复制生成的session token
+```
+
+### 配置方式
+
+1. **GUI配置**: 启动应用后点击「Apple ID」按钮
+2. **命令行配置**: 设置环境变量
+
+   ```bash
+   export APPLE_ID="your-apple-id@example.com"
+   export P12_PATH="/path/to/your/certificate.p12"
+   export P12_PASSWORD="your-p12-password"
+   export FASTLANE_SESSION="your-session-token"
+   ```
+
+> 💡 应用内置详细的「获取指南」，点击Apple ID配置页面的「获取指南」按钮查看完整步骤。
 
 ## 注意
 

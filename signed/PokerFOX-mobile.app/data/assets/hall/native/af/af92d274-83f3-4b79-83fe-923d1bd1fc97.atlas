@@ -1,0 +1,125 @@
+
+V20.png
+size: 742,742
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/20
+  rotate: false
+  xy: 2, 253
+  size: 582, 487
+  orig: 631, 541
+  offset: 24, 26
+  index: -1
+images/V20
+  rotate: false
+  xy: 2, 2
+  size: 334, 249
+  orig: 334, 249
+  offset: 0, 0
+  index: -1
+images/a20
+  rotate: true
+  xy: 412, 76
+  size: 24, 17
+  orig: 25, 18
+  offset: 1, 1
+  index: -1
+images/lizi_zrtb/lizi20001
+  rotate: true
+  xy: 605, 29
+  size: 67, 75
+  orig: 76, 173
+  offset: 0, 0
+  index: -1
+images/lizi_zrtb/lizi20003
+  rotate: true
+  xy: 526, 97
+  size: 72, 77
+  orig: 76, 173
+  offset: 0, 0
+  index: -1
+images/lizi_zrtb/lizi20005
+  rotate: false
+  xy: 338, 59
+  size: 72, 79
+  orig: 76, 173
+  offset: 0, 0
+  index: -1
+images/lizi_zrtb/lizi20007
+  rotate: true
+  xy: 451, 178
+  size: 73, 81
+  orig: 76, 173
+  offset: 0, 0
+  index: -1
+images/lizi_zrtb/lizi20009
+  rotate: false
+  xy: 534, 171
+  size: 73, 80
+  orig: 76, 173
+  offset: 0, 3
+  index: -1
+images/lizi_zrtb/lizi20011
+  rotate: false
+  xy: 451, 98
+  size: 73, 78
+  orig: 76, 173
+  offset: 0, 6
+  index: -1
+images/lizi_zrtb/lizi20013
+  rotate: false
+  xy: 431, 19
+  size: 72, 77
+  orig: 76, 173
+  offset: 0, 9
+  index: -1
+images/lizi_zrtb/lizi20015
+  rotate: false
+  xy: 586, 671
+  size: 65, 69
+  orig: 76, 173
+  offset: 7, 12
+  index: -1
+images/lizi_zrtb/lizi20017
+  rotate: true
+  xy: 605, 98
+  size: 71, 70
+  orig: 76, 173
+  offset: 1, 15
+  index: -1
+images/lizi_zrtb/lizi20019
+  rotate: false
+  xy: 338, 6
+  size: 72, 51
+  orig: 76, 173
+  offset: 0, 18
+  index: -1
+images/lizi_zrtb/lizi20021
+  rotate: true
+  xy: 505, 23
+  size: 72, 49
+  orig: 76, 173
+  offset: 0, 21
+  index: -1
+images/lizi_zrtb/lizi20023
+  rotate: true
+  xy: 556, 23
+  size: 72, 47
+  orig: 76, 173
+  offset: 0, 25
+  index: -1
+images/lizi_zrtb/lizi20025
+  rotate: true
+  xy: 412, 102
+  size: 36, 34
+  orig: 76, 173
+  offset: 0, 40
+  index: -1
+images/lxx
+  rotate: false
+  xy: 338, 140
+  size: 111, 111
+  orig: 111, 111
+  offset: 0, 0
+  index: -1

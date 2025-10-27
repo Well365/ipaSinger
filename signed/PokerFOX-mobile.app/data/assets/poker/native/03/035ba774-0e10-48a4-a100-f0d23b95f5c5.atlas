@@ -1,0 +1,376 @@
+
+HBY_jinhongbao.png
+size: 994,985
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+11111/jinbian33_00000
+  rotate: false
+  xy: 2, 971
+  size: 13, 12
+  orig: 100, 146
+  offset: 10, 13
+  index: -1
+11111/jinbian33_00002
+  rotate: false
+  xy: 83, 945
+  size: 41, 38
+  orig: 100, 146
+  offset: 9, 13
+  index: -1
+11111/jinbian33_00004
+  rotate: true
+  xy: 651, 918
+  size: 65, 66
+  orig: 100, 146
+  offset: 9, 13
+  index: -1
+11111/jinbian33_00006
+  rotate: true
+  xy: 160, 851
+  size: 81, 96
+  orig: 100, 146
+  offset: 9, 13
+  index: -1
+11111/jinbian33_00008
+  rotate: true
+  xy: 362, 846
+  size: 82, 119
+  orig: 100, 146
+  offset: 9, 13
+  index: -1
+11111/jinbian33_00010
+  rotate: true
+  xy: 483, 836
+  size: 82, 120
+  orig: 100, 146
+  offset: 9, 13
+  index: -1
+11111/jinbian33_00012
+  rotate: true
+  xy: 258, 847
+  size: 82, 102
+  orig: 100, 146
+  offset: 9, 31
+  index: -1
+11111/jinbian33_00014
+  rotate: true
+  xy: 2, 878
+  size: 75, 76
+  orig: 100, 146
+  offset: 16, 57
+  index: -1
+11111/jinbian33_00016
+  rotate: false
+  xy: 310, 931
+  size: 53, 52
+  orig: 100, 146
+  offset: 38, 81
+  index: -1
+11111/jinbian33_00018
+  rotate: false
+  xy: 17, 955
+  size: 30, 28
+  orig: 100, 146
+  offset: 61, 105
+  index: -1
+4_lizigb
+  rotate: false
+  xy: 885, 813
+  size: 102, 94
+  orig: 102, 99
+  offset: 0, 0
+  index: -1
+BJtx
+  rotate: true
+  xy: 230, 247
+  size: 184, 188
+  orig: 184, 188
+  offset: 0, 0
+  index: -1
+HByu1
+  rotate: false
+  xy: 719, 914
+  size: 92, 69
+  orig: 93, 70
+  offset: 0, 0
+  index: -1
+HByu2
+  rotate: true
+  xy: 126, 945
+  size: 38, 53
+  orig: 38, 54
+  offset: 0, 0
+  index: -1
+HByu3
+  rotate: false
+  xy: 49, 955
+  size: 32, 28
+  orig: 33, 28
+  offset: 1, 0
+  index: -1
+HByu4
+  rotate: false
+  xy: 181, 938
+  size: 51, 45
+  orig: 52, 47
+  offset: 1, 1
+  index: -1
+HByu5
+  rotate: true
+  xy: 234, 934
+  size: 49, 74
+  orig: 54, 80
+  offset: 3, 4
+  index: -1
+HByu6
+  rotate: true
+  xy: 616, 572
+  size: 132, 144
+  orig: 134, 144
+  offset: 1, 0
+  index: -1
+HByu7
+  rotate: true
+  xy: 365, 930
+  size: 53, 61
+  orig: 54, 62
+  offset: 0, 1
+  index: -1
+HByu8
+  rotate: true
+  xy: 2, 770
+  size: 95, 126
+  orig: 95, 127
+  offset: 0, 0
+  index: -1
+HByu9
+  rotate: false
+  xy: 408, 433
+  size: 164, 157
+  orig: 209, 215
+  offset: 30, 7
+  index: -1
+PFhong11
+  rotate: true
+  xy: 734, 818
+  size: 93, 149
+  orig: 117, 220
+  offset: 3, 36
+  index: -1
+big_luoguang
+  rotate: true
+  xy: 187, 473
+  size: 148, 219
+  orig: 200, 256
+  offset: 24, 14
+  index: -1
+shengji/big_luoguang
+  rotate: true
+  xy: 187, 473
+  size: 148, 219
+  orig: 200, 256
+  offset: 24, 14
+  index: -1
+cdg
+  rotate: true
+  xy: 2, 475
+  size: 147, 183
+  orig: 154, 202
+  offset: 0, 19
+  index: -1
+dakaiga
+  rotate: true
+  xy: 574, 413
+  size: 157, 162
+  orig: 163, 177
+  offset: 0, 0
+  index: -1
+dakaigb
+  rotate: false
+  xy: 762, 550
+  size: 140, 140
+  orig: 144, 144
+  offset: 2, 2
+  index: -1
+diguang
+  rotate: true
+  xy: 895, 909
+  size: 74, 97
+  orig: 76, 99
+  offset: 1, 1
+  index: -1
+diguang2
+  rotate: true
+  xy: 420, 211
+  size: 200, 202
+  orig: 200, 202
+  offset: 0, 0
+  index: -1
+ga
+  rotate: false
+  xy: 460, 732
+  size: 107, 102
+  orig: 110, 105
+  offset: 1, 1
+  index: -1
+guangquan_jin
+  rotate: false
+  xy: 185, 624
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+heididi
+  rotate: false
+  xy: 2, 290
+  size: 226, 181
+  orig: 232, 187
+  offset: 3, 3
+  index: -1
+hongbaoguang
+  rotate: true
+  xy: 605, 823
+  size: 89, 127
+  orig: 91, 129
+  offset: 1, 1
+  index: -1
+huang
+  rotate: false
+  xy: 569, 722
+  size: 148, 99
+  orig: 148, 102
+  offset: 0, 2
+  index: -1
+huangb
+  rotate: false
+  xy: 446, 592
+  size: 168, 128
+  orig: 169, 129
+  offset: 1, 0
+  index: -1
+huangquana
+  rotate: false
+  xy: 832, 692
+  size: 119, 119
+  orig: 121, 121
+  offset: 1, 1
+  index: -1
+jinb/01
+  rotate: false
+  xy: 483, 925
+  size: 59, 58
+  orig: 70, 70
+  offset: 7, 5
+  index: -1
+jinb/yb
+  rotate: false
+  xy: 544, 920
+  size: 105, 63
+  orig: 105, 63
+  offset: 0, 0
+  index: -1
+kai
+  rotate: false
+  xy: 738, 381
+  size: 183, 167
+  orig: 192, 171
+  offset: 6, 0
+  index: -1
+niug
+  rotate: false
+  xy: 130, 754
+  size: 328, 90
+  orig: 331, 90
+  offset: 0, 0
+  index: -1
+shengji/niug
+  rotate: false
+  xy: 130, 754
+  size: 328, 90
+  orig: 331, 90
+  offset: 0, 0
+  index: -1
+shanguang
+  rotate: true
+  xy: 2, 627
+  size: 125, 181
+  orig: 150, 219
+  offset: 12, 19
+  index: -1
+shengji/BJtx
+  rotate: true
+  xy: 2, 2
+  size: 243, 248
+  orig: 243, 248
+  offset: 0, 0
+  index: -1
+shengji/ZJA_txa
+  rotate: false
+  xy: 315, 623
+  size: 129, 129
+  orig: 140, 140
+  offset: 5, 6
+  index: -1
+shengji/ZJA_txb
+  rotate: true
+  xy: 813, 913
+  size: 70, 80
+  orig: 102, 110
+  offset: 15, 15
+  index: -1
+shengji/ZJA_txc
+  rotate: false
+  xy: 428, 930
+  size: 53, 53
+  orig: 64, 64
+  offset: 5, 6
+  index: -1
+shengji/gyun
+  rotate: false
+  xy: 624, 170
+  size: 265, 209
+  orig: 281, 255
+  offset: 15, 21
+  index: -1
+xx
+  rotate: true
+  xy: 719, 706
+  size: 110, 111
+  orig: 111, 111
+  offset: 1, 0
+  index: -1
+zuanshi
+  rotate: true
+  xy: 80, 867
+  size: 76, 78
+  orig: 76, 78
+  offset: 0, 0
+  index: -1
+
+HBY_jinhongbao2.png
+size: 932,634
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+dahongbao
+  rotate: true
+  xy: 459, 310
+  size: 322, 471
+  orig: 328, 477
+  offset: 2, 2
+  index: -1
+di
+  rotate: true
+  xy: 459, 6
+  size: 302, 412
+  orig: 302, 414
+  offset: 0, 0
+  index: -1
+hongbao
+  rotate: false
+  xy: 2, 2
+  size: 455, 630
+  orig: 509, 666
+  offset: 25, 11
+  index: -1

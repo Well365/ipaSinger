@@ -1,0 +1,48 @@
+
+qpbdg.png
+size: 283,177
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/2leishui
+  rotate: false
+  xy: 245, 96
+  size: 34, 38
+  orig: 34, 38
+  offset: 0, 0
+  index: -1
+images/2leishui2
+  rotate: false
+  xy: 245, 136
+  size: 34, 39
+  orig: 34, 39
+  offset: 0, 0
+  index: -1
+images/2youyan
+  rotate: false
+  xy: 231, 5
+  size: 50, 37
+  orig: 50, 37
+  offset: 0, 0
+  index: -1
+images/2zui
+  rotate: true
+  xy: 179, 44
+  size: 131, 64
+  orig: 131, 64
+  offset: 0, 0
+  index: -1
+images/2zuoyan
+  rotate: false
+  xy: 179, 5
+  size: 50, 37
+  orig: 50, 37
+  offset: 0, 0
+  index: -1
+images/di
+  rotate: true
+  xy: 2, 2
+  size: 173, 175
+  orig: 173, 175
+  offset: 0, 0
+  index: -1

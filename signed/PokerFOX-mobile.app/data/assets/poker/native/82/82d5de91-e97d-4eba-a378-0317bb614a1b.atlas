@@ -1,0 +1,48 @@
+
+xiongmao.png
+size: 271,132
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/er1
+  rotate: false
+  xy: 176, 77
+  size: 59, 53
+  orig: 59, 53
+  offset: 0, 0
+  index: -1
+images/er2
+  rotate: false
+  xy: 176, 23
+  size: 59, 52
+  orig: 59, 52
+  offset: 0, 0
+  index: -1
+images/lian
+  rotate: false
+  xy: 2, 2
+  size: 172, 128
+  orig: 172, 128
+  offset: 0, 0
+  index: -1
+images/yan1
+  rotate: false
+  xy: 237, 98
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+images/yan2
+  rotate: false
+  xy: 237, 64
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+images/zui
+  rotate: false
+  xy: 176, 3
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: -1

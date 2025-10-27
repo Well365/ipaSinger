@@ -1,0 +1,34 @@
+
+mmd.png
+size: 307,177
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/12youtaoxin
+  rotate: false
+  xy: 179, 14
+  size: 85, 77
+  orig: 90, 82
+  offset: 4, 0
+  index: -1
+images/12zui
+  rotate: true
+  xy: 259, 128
+  size: 47, 46
+  orig: 47, 46
+  offset: 0, 0
+  index: -1
+images/12zuotiaoxin
+  rotate: true
+  xy: 179, 93
+  size: 82, 78
+  orig: 82, 78
+  offset: 0, 0
+  index: -1
+images/di
+  rotate: true
+  xy: 2, 2
+  size: 173, 175
+  orig: 173, 175
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,34 @@
+
+rwkk.png
+size: 268,177
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/1youyab
+  rotate: false
+  xy: 230, 97
+  size: 35, 38
+  orig: 35, 38
+  offset: 0, 0
+  index: -1
+images/1zuoyan
+  rotate: false
+  xy: 230, 137
+  size: 36, 38
+  orig: 36, 38
+  offset: 0, 0
+  index: -1
+images/8huzi
+  rotate: true
+  xy: 179, 21
+  size: 154, 49
+  orig: 154, 49
+  offset: 0, 0
+  index: -1
+images/di
+  rotate: true
+  xy: 2, 2
+  size: 173, 175
+  orig: 173, 175
+  offset: 0, 0
+  index: -1

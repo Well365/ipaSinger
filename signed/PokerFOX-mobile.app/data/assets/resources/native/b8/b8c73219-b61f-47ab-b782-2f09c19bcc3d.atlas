@@ -1,0 +1,69 @@
+
+aidemoli.png
+size: 892,892
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/1banggaog
+  rotate: true
+  xy: 537, 2
+  size: 154, 169
+  orig: 168, 200
+  offset: 12, 30
+  index: -1
+images/1banglizi
+  rotate: false
+  xy: 696, 597
+  size: 179, 293
+  orig: 181, 294
+  offset: 2, 1
+  index: -1
+images/1bangzi
+  rotate: true
+  xy: 2, 23
+  size: 306, 533
+  orig: 306, 534
+  offset: 0, 1
+  index: -1
+images/1bianqiliu
+  rotate: false
+  xy: 470, 535
+  size: 224, 355
+  orig: 297, 433
+  offset: 68, 29
+  index: -1
+images/1gunga
+  rotate: true
+  xy: 708, 62
+  size: 94, 169
+  orig: 118, 216
+  offset: 16, 11
+  index: -1
+images/1gungb
+  rotate: true
+  xy: 537, 158
+  size: 175, 275
+  orig: 202, 319
+  offset: 26, 21
+  index: -1
+images/1shou
+  rotate: true
+  xy: 765, 406
+  size: 189, 110
+  orig: 189, 110
+  offset: 0, 0
+  index: -1
+images/1taoxinqiliu
+  rotate: true
+  xy: 470, 335
+  size: 198, 293
+  orig: 239, 315
+  offset: 40, 22
+  index: -1
+images/1xxlizi
+  rotate: false
+  xy: 2, 331
+  size: 466, 559
+  orig: 472, 646
+  offset: 6, 0
+  index: -1
