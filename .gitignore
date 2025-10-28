@@ -136,3 +136,5 @@ ehthumbs.db
 # Bundle directory
 
 fastlane/vendor/
+signed/
+out/

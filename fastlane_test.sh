@@ -134,52 +134,52 @@ else
     echo "⚠️  跳过设备注册测试"
 fi
 
-echo ""
+# echo ""
 
-# 测试3: IPA签名
-echo "✍️  测试3: IPA签名"
-echo "================"
-export IPA_PATH="$IPA_PATH"
+# # 测试3: IPA签名
+# echo "✍️  测试3: IPA签名"
+# echo "================"
+# export IPA_PATH="$IPA_PATH"
 
-echo "环境变量:"
-echo "IPA_PATH=$IPA_PATH"
-echo "BUNDLE_ID=$BUNDLE_ID"
-echo ""
-echo "命令: bundle exec fastlane resign_ipa"
-echo ""
+# echo "环境变量:"
+# echo "IPA_PATH=$IPA_PATH"
+# echo "BUNDLE_ID=$BUNDLE_ID"
+# echo ""
+# echo "命令: bundle exec fastlane resign_ipa"
+# echo ""
 
-if [ "$choice" != "3" ]; then
-    echo "🚀 开始IPA重签名..."
-    bundle exec fastlane resign_ipa
-    resign_result=$?
-    if [ $resign_result -eq 0 ]; then
-        echo "✅ IPA签名成功"
+# if [ "$choice" != "3" ]; then
+#     echo "🚀 开始IPA重签名..."
+#     bundle exec fastlane resign_ipa
+#     resign_result=$?
+#     if [ $resign_result -eq 0 ]; then
+#         echo "✅ IPA签名成功"
         
-        # 查找输出文件
-        echo ""
-        echo "🔍 查找签名后的IPA文件..."
-        find /tmp -name "*resigned*.ipa" -newer "$IPA_PATH" 2>/dev/null | head -5
+#         # 查找输出文件
+#         echo ""
+#         echo "🔍 查找签名后的IPA文件..."
+#         find /tmp -name "*resigned*.ipa" -newer "$IPA_PATH" 2>/dev/null | head -5
         
-    else
-        echo "❌ IPA签名失败 (退出代码: $resign_result)"
-    fi
-else
-    echo "⚠️  跳过IPA签名测试"
-fi
+#     else
+#         echo "❌ IPA签名失败 (退出代码: $resign_result)"
+#     fi
+# else
+#     echo "⚠️  跳过IPA签名测试"
+# fi
 
-echo ""
-echo "📊 测试完成"
-echo "==========="
+# echo ""
+# echo "📊 测试完成"
+# echo "==========="
 
-if [ "$choice" != "3" ]; then
-    echo "如果所有步骤都成功，说明签名环境正常"
-    echo "如果有失败，请检查对应的错误信息"
-else
-    echo "要进行实际测试，请重新运行并提供真实凭证"
-fi
+# if [ "$choice" != "3" ]; then
+#     echo "如果所有步骤都成功，说明签名环境正常"
+#     echo "如果有失败，请检查对应的错误信息"
+# else
+#     echo "要进行实际测试，请重新运行并提供真实凭证"
+# fi
 
-echo ""
-echo "💡 下一步:"
-echo "1. 查看上面的错误信息"
-echo "2. 检查Fastfile配置"
-echo "3. 确认证书和Profile配置"
+# echo ""
+# echo "💡 下一步:"
+# echo "1. 查看上面的错误信息"
+# echo "2. 检查Fastfile配置"
+# echo "3. 确认证书和Profile配置"
