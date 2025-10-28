@@ -10,7 +10,7 @@ struct MacSignerApp: App {
                 .environmentObject(signerManager)
         }
         .windowResizability(.contentSize)
-        .defaultSize(width: 600, height: 500)
+        .defaultSize(width: 600, height: 550)
 
         Settings {
             TabView {
@@ -25,6 +25,7 @@ struct MacSignerApp: App {
                         Label("Apple 帐号", systemImage: "person.crop.circle")
                     }
             }
+            .padding(.top, 40)
             .frame(width: 580, height: 440)
         }
     }

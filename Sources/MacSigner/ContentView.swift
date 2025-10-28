@@ -13,46 +13,51 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 20) {
             // 标题栏
-            HStack {
-                Image(systemName: "signature")
-                    .foregroundColor(.blue)
-                    .font(.title)
-                Text("MacSigner")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                
-                Spacer()
-                
-                Button("本地签名") {
-                    openLocalSignWindow()
+            VStack(spacing: 15) {
+                HStack {
+                    Image(systemName: "signature")
+                        .foregroundColor(.blue)
+                        .font(.title)
+                    Text("MacSigner")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    Spacer()
                 }
-                .buttonStyle(.bordered)
                 
-                Button("环境安装") {
-                    showingEnvironmentSetup = true
+                HStack {
+                    Spacer()
+                    
+                    Button("本地签名") {
+                        openLocalSignWindow()
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Button("环境安装") {
+                        showingEnvironmentSetup = true
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Button("服务器配置") {
+                        openServerConfigWindow()
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Button("Apple ID") {
+                        openAppleCredentialWindow()
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Button("Apple API") {
+                        openAppleAPIConfigWindow()
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Button("设备管理") {
+                        openAddDeviceWindow()
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .buttonStyle(.bordered)
-                
-                Button("服务器配置") {
-                    openServerConfigWindow()
-                }
-                .buttonStyle(.bordered)
-                
-                Button("Apple ID") {
-                    openAppleCredentialWindow()
-                }
-                .buttonStyle(.bordered)
-                
-                Button("Apple API") {
-                    openAppleAPIConfigWindow()
-                }
-                .buttonStyle(.bordered)
-                
-                Button("设备管理") {
-                    openAddDeviceWindow()
-                }
-                .buttonStyle(.bordered)
-               
             }
             .padding()
             
@@ -143,7 +148,7 @@ struct ContentView: View {
             Spacer()
         }
         .padding()
-        .frame(width: 600, height: 500)
+        .frame(width: 600, height: 550)
         .sheet(isPresented: $showingInputTest) {
             InputTestView()
         }
