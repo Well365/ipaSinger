@@ -288,7 +288,7 @@ struct EnvironmentSetupView: View {
                 rows.append(
                     SetupStep(
                         title: "检查 fastlane 目录",
-                        detail: "确认项目根目录下存在 fastlane 目录，包含 Gemfile。",
+                        detail: "确认项目根目录下存在 fastlane 目录，包含 Gemfile 和 .ruby-version。",
                         command: nil
                     )
                 )
@@ -299,24 +299,64 @@ struct EnvironmentSetupView: View {
         let fastlanePath = shellQuote(fastlaneRoot.path)
         return [
             SetupStep(
+                title: "安装 rbenv (Ruby 版本管理)",
+                detail: "安装 rbenv 来管理项目专用的 Ruby 版本，避免依赖系统 Ruby。",
+                command: "brew install rbenv ruby-build"
+            ),
+            SetupStep(
+                title: "设置 rbenv 环境",
+                detail: "初始化 rbenv 并添加到 shell 配置中。",
+                command: "echo 'eval \"$(rbenv init -)\"' >> ~/.zshrc && source ~/.zshrc"
+            ),
+            SetupStep(
+                title: "安装项目指定的 Ruby 版本",
+                detail: "根据 .ruby-version 文件安装项目需要的 Ruby 版本。",
+                command: "cd \(fastlanePath) && rbenv install $(cat .ruby-version 2>/dev/null || echo '3.1.0')"
+            ),
+            SetupStep(
+                title: "设置项目 Ruby 版本",
+                detail: "为当前项目设置本地 Ruby 版本。",
+                command: "cd \(fastlanePath) && rbenv local $(cat .ruby-version 2>/dev/null || echo '3.1.0')"
+            ),
+            SetupStep(
+                title: "安装 Bundler",
+                detail: "在项目指定的 Ruby 版本中安装 Bundler。",
+                command: "cd \(fastlanePath) && rbenv exec gem install bundler"
+            ),
+            SetupStep(
+                title: "配置 Bundle 设置",
+                detail: "配置 Bundle 使用本地路径和项目指定的 Ruby。",
+                command: "cd \(fastlanePath) && rbenv exec bundle config set --local path 'vendor/bundle' && rbenv exec bundle config set --local deployment 'true'"
+            ),
+            SetupStep(
+                title: "安装 fastlane 依赖",
+                detail: "使用项目 Ruby 版本安装所有 gems，包括 fastlane。",
+                command: "cd \(fastlanePath) && rbenv exec bundle install"
+            ),
+            SetupStep(
+                title: "验证环境",
+                detail: "验证使用的是项目本地的 Ruby 和 fastlane 版本。",
+                command: "cd \(fastlanePath) && rbenv exec bundle exec ruby --version && rbenv exec bundle exec fastlane --version"
+            ),
+            SetupStep(
                 title: "更新 Swift 依赖",
                 detail: "下载并锁定 Swift 包依赖。",
                 command: "cd \(rootPath) && rm -rf .build && swift package clean && swift package resolve"
             ),
             SetupStep(
-                title: "安装 Bundler",
-                detail: "确保 Ruby Bundler 可用，用于管理 fastlane 依赖。",
-                command: "gem install bundler"
+                title: "清理 App Store Connect 会话",
+                detail: "如果之前设置过 FASTLANE_SESSION，建议先清理以避免认证冲突。",
+                command: "unset FASTLANE_SESSION"
             ),
             SetupStep(
-                title: "安装 fastlane 依赖",
-                detail: "在 fastlane 目录安装 Gemfile 中的依赖。",
-                command: "cd \(fastlanePath) && bundle install"
+                title: "配置 App Store Connect 认证",
+                detail: "使用 spaceauth 为 App Store Connect 生成认证会话。替换为你的 Apple ID。",
+                command: "cd \(fastlanePath) && rbenv exec bundle exec fastlane spaceauth -u your-apple-id@example.com"
             ),
             SetupStep(
-                title: "验证 fastlane",
-                detail: "确认 fastlane 可以通过 Bundler 调用。",
-                command: "cd \(fastlanePath) && bundle exec fastlane --version"
+                title: "设置环境变量 (可选)",
+                detail: "将生成的 FASTLANE_SESSION 保存到环境变量中，避免每次都需要登录。",
+                command: "export FASTLANE_SESSION='从 spaceauth 命令输出中复制的会话字符串'"
             )
         ]
     }
@@ -324,10 +364,17 @@ struct EnvironmentSetupView: View {
     private func autoInstallCommands(resolver: ProjectPathResolver) -> [AutoInstallCommand] {
         guard let projectRoot = resolver.projectRoot, let fastlaneRoot = resolver.fastlaneRoot else { return [] }
         return [
+            AutoInstallCommand(title: "检查 rbenv", command: "if ! command -v rbenv >/dev/null 2>&1; then brew install rbenv ruby-build; fi", workingDirectory: nil),
+            AutoInstallCommand(title: "初始化 rbenv", command: "eval \"$(rbenv init -)\"", workingDirectory: nil),
+            AutoInstallCommand(title: "安装项目 Ruby", command: "rbenv install $(cat .ruby-version 2>/dev/null || echo '3.1.0') --skip-existing", workingDirectory: fastlaneRoot),
+            AutoInstallCommand(title: "设置本地 Ruby", command: "rbenv local $(cat .ruby-version 2>/dev/null || echo '3.1.0')", workingDirectory: fastlaneRoot),
+            AutoInstallCommand(title: "安装 Bundler", command: "rbenv exec gem install bundler", workingDirectory: fastlaneRoot),
+            AutoInstallCommand(title: "配置 Bundle", command: "rbenv exec bundle config set --local path 'vendor/bundle' && rbenv exec bundle config set --local deployment 'true'", workingDirectory: fastlaneRoot),
+            AutoInstallCommand(title: "安装依赖", command: "rbenv exec bundle install", workingDirectory: fastlaneRoot),
+            AutoInstallCommand(title: "验证环境", command: "rbenv exec bundle exec fastlane --version", workingDirectory: fastlaneRoot),
             AutoInstallCommand(title: "更新 Swift 依赖", command: "swift package resolve", workingDirectory: projectRoot),
-            AutoInstallCommand(title: "安装 Bundler", command: "if ! command -v bundle >/dev/null 2>&1; then gem install bundler; fi", workingDirectory: nil),
-            AutoInstallCommand(title: "安装 fastlane 依赖", command: "bundle install", workingDirectory: fastlaneRoot),
-            AutoInstallCommand(title: "验证 fastlane", command: "bundle exec fastlane --version", workingDirectory: fastlaneRoot)
+            AutoInstallCommand(title: "清理认证会话", command: "unset FASTLANE_SESSION", workingDirectory: nil),
+            AutoInstallCommand(title: "检查认证状态", command: "echo '注意: 需要手动运行 fastlane spaceauth 进行 App Store Connect 认证'", workingDirectory: fastlaneRoot)
         ]
     }
     

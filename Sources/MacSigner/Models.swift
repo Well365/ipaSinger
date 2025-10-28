@@ -22,8 +22,17 @@ struct ResignOptions: Codable {
 struct LoginCredential: Codable {
     let appleId: String
     let sessionToken: String?
+    let sessionExpiryDate: Date?
     let p12Path: String?
     let p12Password: String?
+    
+    init(appleId: String, sessionToken: String? = nil, sessionExpiryDate: Date? = nil, p12Path: String? = nil, p12Password: String? = nil) {
+        self.appleId = appleId
+        self.sessionToken = sessionToken
+        self.sessionExpiryDate = sessionExpiryDate
+        self.p12Path = p12Path
+        self.p12Password = p12Password
+    }
 }
 
 struct DeveloperCertificate: Identifiable, Hashable {

@@ -11,7 +11,8 @@ enum ProcessRunner {
                     _ args: [String],
                     env: [String: String] = [:],
                     cwd: URL? = nil,
-                    tee: ((String) -> Void)? = nil) throws -> ProcessResult {
+                    tee: ((String) -> Void)? = nil,
+                    environmentVariables: [String: String] = [:]) throws -> ProcessResult {
         let task = Process()
         task.executableURL = URL(fileURLWithPath: launchPath)
         task.arguments = args
@@ -19,6 +20,7 @@ enum ProcessRunner {
 
         var fullEnv = ProcessInfo.processInfo.environment
         env.forEach { fullEnv[$0.key] = $0.value }
+        environmentVariables.forEach { fullEnv[$0.key] = $0.value }
         task.environment = fullEnv
 
         let outPipe = Pipe()
