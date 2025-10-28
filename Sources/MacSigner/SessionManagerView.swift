@@ -69,13 +69,6 @@ struct SessionManagerView: View {
         .onAppear {
             loadSavedCredentials()
             sessionMonitor.startMonitoring()
-            
-            // 延迟激活第一个输入字段的焦点
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                if !sessionMonitor.hasValidSession && appleId.isEmpty {
-                    appleIdFocused = true
-                }
-            }
         }
         .onDisappear {
             sessionMonitor.stopMonitoring()
@@ -223,9 +216,8 @@ struct SessionManagerView: View {
                     .font(.subheadline)
                     .fontWeight(.medium)
                 
-                TextField("your-apple-id@example.com", text: $appleId)
-                    .textFieldStyle(.roundedBorder)
-                    .autocorrectionDisabled()
+                NSTextFieldWrapper(text: $appleId, placeholder: "your-apple-id@example.com")
+                    .frame(height: 22)
                     .focused($appleIdFocused)
                     .onSubmit {
                         passwordFocused = true
@@ -237,9 +229,13 @@ struct SessionManagerView: View {
                     .font(.subheadline)
                     .fontWeight(.medium)
                 
-                SecureField(authMode == .appSpecificPassword ? "应用专属密码" : "Apple ID 密码", text: $password)
-                    .textFieldStyle(.roundedBorder)
-                    .focused($passwordFocused)
+                NSTextFieldWrapper(
+                    text: $password, 
+                    placeholder: authMode == .appSpecificPassword ? "应用专属密码" : "Apple ID 密码",
+                    isSecure: true
+                )
+                .frame(height: 22)
+                .focused($passwordFocused)
                 
                 if authMode == .appSpecificPassword {
                     Text("请使用应用专属密码，不是Apple ID密码")
@@ -300,14 +296,6 @@ struct SessionManagerView: View {
         .padding()
         .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
         .cornerRadius(8)
-        .onTapGesture {
-            // 当用户点击区域时，激活第一个空的输入字段
-            if appleId.isEmpty {
-                appleIdFocused = true
-            } else if password.isEmpty {
-                passwordFocused = true
-            }
-        }
     }
     
     private var twoFactorSection: some View {
@@ -326,9 +314,8 @@ struct SessionManagerView: View {
             }
             
             HStack {
-                TextField("000000", text: $twoFactorCode)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 120)
+                NSTextFieldWrapper(text: $twoFactorCode, placeholder: "000000")
+                    .frame(width: 120, height: 22)
                     .focused($twoFactorFocused)
                     .onSubmit {
                         if twoFactorCode.count == 6 {

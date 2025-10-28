@@ -8,7 +8,7 @@ struct ContentView: View {
     @State private var appleCredentialWindowController: AppleCredentialWindowController?
     @State private var appleAPIConfigWindowController: NSWindowController?
     @State private var addDeviceWindowController: AddDeviceWindowController?
-    @State private var sessionManagerWindowController: NSWindowController?
+    @State private var sessionManagerWindowController: SessionManagerWindowController?
     @State private var showingEnvironmentSetup = false
     
     var body: some View {
@@ -290,29 +290,14 @@ struct ContentView: View {
         // 如果窗口控制器已存在，直接显示
         if let controller = sessionManagerWindowController {
             print("[DEBUG] Session Manager window controller already exists, showing window")
-            controller.showWindow(nil)
+            controller.show()
             return
         }
         
         // 创建新的窗口控制器
         print("[DEBUG] Creating new Session Manager window controller")
-        
-        let sessionManagerView = SessionManagerView()
-        let hostingController = NSHostingController(rootView: sessionManagerView)
-        
-        let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 700, height: 600),
-            styleMask: [.titled, .closable, .resizable],
-            backing: .buffered,
-            defer: false
-        )
-        
-        window.title = "Session 令牌管理"
-        window.contentViewController = hostingController
-        window.center()
-        
-        let controller = NSWindowController(window: window)
+        let controller = SessionManagerWindowController()
         sessionManagerWindowController = controller
-        controller.showWindow(nil)
+        controller.show()
     }
 }
