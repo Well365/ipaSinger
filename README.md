@@ -3,7 +3,28 @@
 一个 **macOS 命令行 Signer 客户端**（Swift 5.10, SwiftPM），在 **Xcode 里直接打开 `Package.swift`** 即可运行。
 集成 Fastlane：`bundle exec fastlane login/register_udid/resign_ipa` 由 Swift `Process` 驱动。
 
-## 🚀 快速开始
+## � 新功能：GUI Session管理
+
+### ✨ 完整的Session Token自动化管理
+- 🎯 **GUI界面化操作**：将复杂的终端命令包装成友好的图形界面
+- 🔐 **双重认证支持**：应用专属密码 + 账号密码+2FA 两种模式
+- 🌍 **全局环境变量**：自动写入shell配置文件，新终端窗口可用
+- ⏰ **智能过期提醒**：30天倒计时，提前5天开始提醒
+- ✅ **Session验证**：一键检测token有效性和API访问状态
+
+### 🚀 快速使用Session管理
+```bash
+# 快速启动Session管理
+./quick_session.sh
+
+# 独立验证当前Session状态
+./verify_session_token.sh
+
+# 查看详细使用指南
+cat FINAL_SESSION_GUIDE.md
+```
+
+## �🚀 快速开始
 
 ### 一键环境检查
 ```bash

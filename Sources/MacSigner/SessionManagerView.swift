@@ -14,6 +14,10 @@ struct SessionManagerView: View {
     @State private var authMode: AuthMode = .appSpecificPassword
     @State private var setGlobalEnvironment = true
     
+    @FocusState private var appleIdFocused: Bool
+    @FocusState private var passwordFocused: Bool
+    @FocusState private var twoFactorFocused: Bool
+    
     @StateObject private var sessionMonitor = SessionMonitor()
     @StateObject private var authenticator = InteractiveAuthenticator()
     
@@ -65,6 +69,13 @@ struct SessionManagerView: View {
         .onAppear {
             loadSavedCredentials()
             sessionMonitor.startMonitoring()
+            
+            // 延迟激活第一个输入字段的焦点
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                if !sessionMonitor.hasValidSession && appleId.isEmpty {
+                    appleIdFocused = true
+                }
+            }
         }
         .onDisappear {
             sessionMonitor.stopMonitoring()
@@ -161,11 +172,23 @@ struct SessionManagerView: View {
                 }
             }
             
-            Button("重新生成 Session") {
-                sessionMonitor.clearSession()
-                clearForm()
+            HStack(spacing: 12) {
+                Button("重新生成 Session") {
+                    sessionMonitor.clearSession()
+                    clearForm()
+                }
+                .buttonStyle(.borderedProminent)
+                
+                Button("验证 Session") {
+                    verifySession()
+                }
+                .buttonStyle(.bordered)
+                
+                Button("复制到剪贴板") {
+                    copySessionToClipboard()
+                }
+                .buttonStyle(.bordered)
             }
-            .buttonStyle(.borderedProminent)
         }
         .padding()
         .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
@@ -203,6 +226,10 @@ struct SessionManagerView: View {
                 TextField("your-apple-id@example.com", text: $appleId)
                     .textFieldStyle(.roundedBorder)
                     .autocorrectionDisabled()
+                    .focused($appleIdFocused)
+                    .onSubmit {
+                        passwordFocused = true
+                    }
             }
             
             VStack(alignment: .leading, spacing: 8) {
@@ -212,6 +239,7 @@ struct SessionManagerView: View {
                 
                 SecureField(authMode == .appSpecificPassword ? "应用专属密码" : "Apple ID 密码", text: $password)
                     .textFieldStyle(.roundedBorder)
+                    .focused($passwordFocused)
                 
                 if authMode == .appSpecificPassword {
                     Text("请使用应用专属密码，不是Apple ID密码")
@@ -272,6 +300,14 @@ struct SessionManagerView: View {
         .padding()
         .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
         .cornerRadius(8)
+        .onTapGesture {
+            // 当用户点击区域时，激活第一个空的输入字段
+            if appleId.isEmpty {
+                appleIdFocused = true
+            } else if password.isEmpty {
+                passwordFocused = true
+            }
+        }
     }
     
     private var twoFactorSection: some View {
@@ -293,6 +329,19 @@ struct SessionManagerView: View {
                 TextField("000000", text: $twoFactorCode)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 120)
+                    .focused($twoFactorFocused)
+                    .onSubmit {
+                        if twoFactorCode.count == 6 {
+                            submitTwoFactorCode()
+                        }
+                    }
+                    .onChange(of: twoFactorCode) { newValue in
+                        // 限制只能输入数字，最多6位
+                        let filtered = String(newValue.prefix(6).filter { $0.isNumber })
+                        if filtered != newValue {
+                            twoFactorCode = filtered
+                        }
+                    }
                 
                 Button("提交") {
                     submitTwoFactorCode()
@@ -310,6 +359,12 @@ struct SessionManagerView: View {
         .padding()
         .background(Color.blue.opacity(0.1))
         .cornerRadius(8)
+        .onAppear {
+            // 当2FA部分出现时，自动激活输入字段焦点
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                twoFactorFocused = true
+            }
+        }
     }
     
     private var outputSection: some View {
@@ -404,6 +459,15 @@ class SessionMonitor: ObservableObject {
     private var notificationsSupported: Bool {
         // 检查是否在支持通知的环境中
         return Bundle.main.bundleIdentifier != nil && ProcessInfo.processInfo.environment["TERM"] == nil
+    }
+    
+    var currentToken: String? {
+        // 优先从环境变量获取
+        if let envToken = ProcessInfo.processInfo.environment["FASTLANE_SESSION"], !envToken.isEmpty {
+            return envToken
+        }
+        // 其次从UserDefaults获取
+        return userDefaults.string(forKey: "FASTLANE_SESSION")
     }
     
     func startMonitoring() {
@@ -650,6 +714,153 @@ private struct ProjectPathResolver {
         }
         
         return nil
+    }
+}
+
+extension SessionManagerView {
+    private func verifySession() {
+        guard let token = sessionMonitor.currentToken, !token.isEmpty else {
+            authError = "没有可用的 Session Token"
+            return
+        }
+        
+        authError = nil
+        authenticator.output = "正在验证 Session Token...\n"
+        authenticator.output += "检查 Session Token 格式和内容...\n"
+        
+        // 基本格式验证
+        if token.contains("myacinfo") && token.contains("HTTP::Cookie") {
+            authenticator.output += "✅ Session Token 格式正确\n"
+            authenticator.output += "包含必要的认证cookie信息\n"
+            
+            // 检查是否包含过期信息
+            if token.contains("created_at") || token.contains("accessed_at") {
+                authenticator.output += "✅ 包含时间戳信息\n"
+            }
+            authenticator.output += "✅ Session Token 包含必要的认证信息, 初步通过\n"
+            // 简单的网络验证
+            // verifySessionWithNetwork(token: token)
+        } else {
+            authenticator.output += "❌ Session Token 格式不正确\n"
+            authenticator.output += "这可能不是有效的 FASTLANE_SESSION\n"
+            authenticator.output += "建议重新生成 Session Token\n"
+        }
+    }
+    
+    // private func verifySessionWithNetwork(token: String) {
+    //     // 使用fastlane命令验证session的有效性
+    //     DispatchQueue.global(qos: .userInitiated).async {
+    //         let process = Process()
+    //         process.launchPath = "/usr/bin/env"
+            
+    //         // 使用fastlane的spaceship来验证session
+    //         let verifyScript = """
+    //         cd "\(self.pathResolver.fastlaneRoot?.path ?? "/tmp")" 2>/dev/null || cd /tmp
+            
+    //         # 尝试使用fastlane验证session
+    //         if command -v bundle >/dev/null 2>&1; then
+    //             # 使用bundle exec ruby进行验证
+    //             timeout 30 bundle exec ruby -e "
+    //             require 'spaceship'
+    //             begin
+    //               # 设置session token
+    //               Spaceship::ConnectAPI.token = ENV['FASTLANE_SESSION']
+                  
+    //               # 尝试获取用户信息（更稳定的验证方法）
+    //               user_info = Spaceship::ConnectAPI.get('/v1/users/current')
+    //               puts '✅ Session验证成功 - 用户ID: ' + user_info['data']['id'].to_s
+    //               puts '✅ 用户类型: ' + user_info['data']['type'].to_s
+    //               puts '🎉 Session Token完全有效，可以正常使用'
+    //             rescue => e
+    //               puts '❌ Session验证失败: ' + e.message
+    //               puts '可能原因: Session已过期或网络问题'
+    //               exit 1
+    //             end
+    //             " 2>/dev/null || echo "❌ 验证失败，尝试备用方法..."
+    //         else
+    //             # 直接使用ruby进行验证
+    //             timeout 30 ruby -e "
+    //             require 'spaceship'
+    //             begin
+    //               Spaceship::ConnectAPI.token = ENV['FASTLANE_SESSION']
+    //               user_info = Spaceship::ConnectAPI.get('/v1/users/current')
+    //               puts '✅ Session验证成功 - 用户ID: ' + user_info['data']['id'].to_s
+    //               puts '🎉 Session Token完全有效，可以正常使用'
+    //             rescue => e
+    //               puts '❌ Session验证失败: ' + e.message
+    //               exit 1
+    //             end
+    //             " 2>/dev/null || echo "❌ 验证失败"
+    //         fi
+            
+    //         # 检查退出状态
+    //         if [ $? -eq 0 ]; then
+    //             echo "验证成功"
+    //         else
+    //             echo "❌ 无法验证Session - 可能已过期或环境问题"
+    //             echo "建议重新生成Session Token"
+    //         fi
+    //         """
+            
+    //         process.arguments = ["bash", "-c", verifyScript]
+            
+    //         let pipe = Pipe()
+    //         process.standardOutput = pipe
+    //         process.standardError = pipe
+            
+    //         // 设置环境变量
+    //         var environment = ProcessInfo.processInfo.environment
+    //         environment["FASTLANE_SESSION"] = token
+    //         // 确保Ruby能找到spaceship gem
+    //         if let gemPath = environment["GEM_PATH"] {
+    //             environment["GEM_PATH"] = gemPath
+    //         }
+    //         if let bundlePath = environment["BUNDLE_PATH"] {
+    //             environment["BUNDLE_PATH"] = bundlePath
+    //         }
+    //         process.environment = environment
+            
+    //         do {
+    //             try process.run()
+    //             process.waitUntilExit()
+                
+    //             let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    //             let output = String(data: data, encoding: .utf8) ?? ""
+                
+    //             DispatchQueue.main.async {
+    //                 self.authenticator.output += "\n🔍 深度网络验证结果:\n"
+    //                 self.authenticator.output += output + "\n"
+                    
+    //                 if output.contains("验证成功") || output.contains("找到") {
+    //                     self.authenticator.output += "\n✅ Session Token验证通过！\n"
+    //                     self.authenticator.output += "可以正常用于所有App Store Connect操作\n"
+    //                 } else {
+    //                     self.authenticator.output += "\n⚠️  Session Token可能有问题\n"
+    //                     self.authenticator.output += "建议重新生成新的Session Token\n"
+    //                 }
+    //             }
+    //         } catch {
+    //             DispatchQueue.main.async {
+    //                 self.authenticator.output += "\n❌ 网络验证出错: \(error.localizedDescription)\n"
+    //                 self.authenticator.output += "但基本格式验证已通过，可能是环境配置问题\n"
+    //             }
+    //         }
+    //     }
+    // }
+    
+    private func copySessionToClipboard() {
+        guard let token = sessionMonitor.currentToken, !token.isEmpty else {
+            authError = "没有可用的 Session Token"
+            return
+        }
+        
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString("export FASTLANE_SESSION='\(token)'", forType: NSPasteboard.PasteboardType.string)
+        
+        // 显示成功提示
+        authError = nil
+        authenticator.output = "✅ Session Token 已复制到剪贴板\n可以在终端中执行粘贴的命令来设置环境变量。\n"
     }
 }
 

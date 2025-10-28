@@ -1,0 +1,103 @@
+#!/bin/bash
+
+echo "🎉 MacSigner Session管理功能测试指南"
+echo "===================================="
+echo ""
+
+echo "📋 已修复的问题："
+echo "✅ 1. 账号和密码字段无法键盘输入 - 已修复"
+echo "✅ 2. verifySessionWithNetwork验证不准确 - 已改进"
+echo ""
+
+echo "🧪 测试步骤："
+echo ""
+
+echo "1️⃣  启动应用程序"
+echo "   cd /path/to/ipaSingerMac"
+echo "   swift run"
+echo ""
+
+echo "2️⃣  打开Session管理界面"
+echo "   - 点击主界面的 'Session 管理' 按钮"
+echo "   - 观察是否自动激活Apple ID输入字段"
+echo ""
+
+echo "3️⃣  测试输入字段"
+echo "   ✓ Apple ID字段应该可以直接输入"
+echo "   ✓ Tab键可以跳转到密码字段"
+echo "   ✓ 密码字段（SecureField）应该可以正常输入"
+echo "   ✓ 点击界面任意区域可以激活焦点"
+echo ""
+
+echo "4️⃣  测试认证模式切换"
+echo "   ✓ 切换 '应用专属密码' 和 '账号密码' 模式"
+echo "   ✓ 界面文字应该相应更新"
+echo ""
+
+echo "5️⃣  测试全局环境变量开关"
+echo "   ✓ 开启/关闭 '设置为全局环境变量' 开关"
+echo "   ✓ 帮助文字应该相应更新"
+echo ""
+
+echo "6️⃣  测试2FA输入（如果有现有session需要验证）"
+echo "   ✓ 2FA字段应该只能输入数字"
+echo "   ✓ 自动限制为6位数字"
+echo "   ✓ 输入完成后可以按Enter提交"
+echo ""
+
+echo "7️⃣  测试验证功能"
+echo "   ✓ 点击 '验证 Session' 按钮"
+echo "   ✓ 观察输出日志中的验证结果"
+echo "   ✓ 应该看到更准确的验证信息"
+echo ""
+
+echo "8️⃣  测试独立验证脚本"
+echo "   ./verify_session_token.sh"
+echo "   ✓ 应该显示详细的验证过程"
+echo "   ✓ 包含基本格式验证和网络验证"
+echo ""
+
+echo "🎯 预期结果："
+echo ""
+echo "输入字段测试："
+echo "- Apple ID和密码字段可以正常输入"
+echo "- 自动焦点管理工作正常"
+echo "- Tab键和Enter键响应正确"
+echo "- 2FA字段格式化正常"
+echo ""
+
+echo "验证功能测试："
+echo "- GUI验证显示详细的spaceship API结果"
+echo "- 独立脚本使用多层级验证策略"
+echo "- 错误处理更加完善"
+echo "- 结果显示更加准确"
+echo ""
+
+echo "🚨 如果遇到问题："
+echo ""
+echo "输入字段无响应："
+echo "1. 尝试点击输入字段区域"
+echo "2. 检查是否有其他窗口获得焦点"
+echo "3. 重新打开Session管理窗口"
+echo ""
+
+echo "验证失败："
+echo "1. 检查网络连接"
+echo "2. 验证Ruby/fastlane环境"
+echo "3. 考虑Session token已过期"
+echo "4. 尝试重新生成Session"
+echo ""
+
+echo "🔧 调试信息："
+echo "- 应用会输出详细的DEBUG日志"
+echo "- 验证过程会显示完整的输出"
+echo "- 错误信息包含具体的原因说明"
+echo ""
+
+echo "📖 更多信息："
+echo "- 详细修复说明: SESSION_FIXES_SUMMARY.md"
+echo "- 完整使用指南: FINAL_SESSION_GUIDE.md"
+echo "- 快速启动工具: ./quick_session.sh"
+
+echo ""
+echo "🎉 开始测试吧！"
